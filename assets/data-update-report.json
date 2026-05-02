@@ -1,0 +1,71 @@
+{
+  "rows_loaded_after_removal": 48715,
+  "removed_row_ids": [
+    "24167"
+  ],
+  "unique_roles": 585,
+  "career_families": {
+    "Engineering, Manufacturing & Trades": 167,
+    "Business, Administration & Management": 48,
+    "ICT & Data": 31,
+    "Retail, Sales & Customer Service": 16,
+    "Transport, Logistics & Supply Chain": 35,
+    "Health, Safety & Community Services": 38,
+    "Hospitality, Tourism & Food Services": 33,
+    "Finance, Banking & Insurance": 19,
+    "Agriculture, Environment & Natural Resources": 34,
+    "Education, Training & Human Development": 22,
+    "Media, Creative & Communication": 24,
+    "Legal, Security & Public Services": 22,
+    "Beauty, Wellness & Personal Care": 14,
+    "Construction, Property & Facilities": 24,
+    "Mining, Energy & Utilities": 16,
+    "Textiles, Clothing, Furniture & Wood": 42
+  },
+  "home_explore_careers": [
+    "Data Analyst",
+    "Electrician",
+    "Chef",
+    "Health Promotion Officer",
+    "Office Administrator",
+    "Welder",
+    "ECD Practitioner",
+    "Hairdresser",
+    "Retail Sales Advisor"
+  ],
+  "minorFixes_2026_04_30": {
+    "homeExploreCareersReplacement": {
+      "removed": "Health Promotion Officer",
+      "added": "Care Worker",
+      "reason": "Shorter label and valid dataset records"
+    },
+    "setaPartnerCorrections": [
+      {
+        "provider": "4Tops Academy",
+        "career": "Construction Artisan",
+        "oldPartner": "Not available",
+        "newPartner": "CETA",
+        "rowsUpdated": 2
+      },
+      {
+        "provider": "Saysea",
+        "career": "ECD Practitioner",
+        "oldPartner": "Not available",
+        "newPartner": "ETDP SETA",
+        "rowsUpdated": 1
+      }
+    ],
+    "cityTownFilter": "City/Town options now update according to the selected province.",
+    "rolesCardLayout": "Role rows now expand and wrap long role names/subtitles without spilling out."
+  },
+  "uniqueOrganisationFix": {
+    "date": "2026-04-30",
+    "change": "Explore table compact data now includes orgGroupId from the cleaned Unique_Org_ID field; Explore stats now count unique organisations by orgGroupId, matching the Home page logic.",
+    "validation": {
+      "records": 48715,
+      "uniqueOrganisations": 5172,
+      "activeAccreditations": 40915,
+      "setaQualityPartners": 25
+    }
+  }
+}

@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QCTO Accredited Skills Development Providers Platform</title>
+  <link rel="stylesheet" href="styles.css?v=14" />
+  <link rel="preload" as="image" href="assets/partner-logos-ui/services-seta.png?v=13" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/nated.png?v=13">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/hwseta.png?v=13">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/etdp-seta.png?v=13">
+  <link rel="preload" as="image" href="assets/south-africa-provinces-v10.svg">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/agriseta.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/bankseta.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/cathsseta.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/ceta.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/chieta.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/ewseta.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/fasset.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/foodbev-seta.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/fpm-seta.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/inseta.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/lgseta.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/merseta.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/mict-seta.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/mqa.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/namb-dhet.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/pseta.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/qcto.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/sapc.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/sasseta.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/teta.png?v=13" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/partner-logos-ui/wrseta.png?v=13" fetchpriority="low">
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell header-shell">
+      <a class="brand" href="#home" data-view="home" aria-label="QCTO Home">
+        <img src="assets/qcto-logo.svg" alt="QCTO logo" decoding="async" fetchpriority="high" />
+      </a>
+
+      <button class="mobile-menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="primary-navigation">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+
+      <nav class="main-nav" id="primary-navigation" aria-label="Primary navigation">
+        <button class="nav-link active" type="button" data-view="home">Home</button>
+        <button class="nav-link nav-explore" type="button" data-view="explore">Explore</button>
+        <button class="nav-link" type="button" data-view="careers">Career Map</button>
+        <button class="nav-link" type="button" data-view="about">About</button>
+      </nav>
+
+      <div class="header-spacer" aria-hidden="true"></div>
+    </div>
+  </header>
+
+  <main class="shell page-shell">
+    <section class="page-view active" data-page="home">
+      <section class="hero home-hero">
+        <div class="hero-copy home-copy">
+          <h1>South African Accredited Skills Development Providers (SDPs)</h1>
+          <p>Explore trusted training providers, qualifications and career pathways across South Africa.</p>
+          <div class="home-search-wrap">
+            <form class="search-bar home-search-bar" id="home-search-form" aria-label="Search careers and qualification titles" autocomplete="off">
+              <span class="search-icon" aria-hidden="true"></span>
+              <input id="home-search-input" type="text" value="" placeholder="Search careers or qualification titles" aria-label="Search careers or qualification titles" />
+              <button id="home-search-button" type="submit">Search</button>
+            </form>
+            <div id="home-search-suggestions" class="search-suggestions home-search-suggestions" role="listbox" aria-label="Home search suggestions" hidden></div>
+          </div>
+        </div>
+        <div class="hero-image" aria-hidden="true">
+          <img src="assets/qcto-hero-banner.webp" alt="" decoding="async" fetchpriority="high" />
+        </div>
+      </section>
+
+      <section class="callout callout-action">
+        <span class="callout-icon people-icon" aria-hidden="true"></span>
+        <div class="callout-copy">
+          <strong>Your future. Our impact.</strong>
+          <span>Helping unemployed South Africans explore qualifications, find accredited providers, and contact them about possible learnership opportunities.</span>
+        </div>
+        <button class="primary small" type="button" data-view="explore">Start exploring <span aria-hidden="true">&rarr;</span></button>
+      </section>
+
+      <section class="panel ai-assistant-entry" aria-labelledby="ai-assistant-entry-title">
+        <span class="ai-assistant-entry-icon" aria-hidden="true">AI</span>
+        <div>
+          <h3 id="ai-assistant-entry-title">Not sure where to start?</h3>
+          <p>Ask the Gemma Learnership Assistant to suggest career paths, qualifications and accredited providers from the platform data.</p>
+        </div>
+        <button class="primary ai-open-button" type="button" data-open-ai-assistant>Ask AI Assistant</button>
+      </section>
+
+      <section class="top-grid home-top-grid">
+        <article class="stat-card red">
+          <span class="round-icon bank" aria-hidden="true"></span>
+          <strong id="home-stat-accreditation-records">48,716</strong>
+          <span>Accreditation records</span>
+          <small>Verified &amp; active</small>
+        </article>
+        <article class="stat-card green">
+          <span class="round-icon group" aria-hidden="true"></span>
+          <strong id="home-stat-unique-organisations">8,667</strong>
+          <span>Unique organisations</span>
+          <small>Training with impact</small>
+        </article>
+        <article class="stat-card blue">
+          <span class="round-icon award" aria-hidden="true"></span>
+          <strong id="home-stat-active-accreditations">40,916</strong>
+          <span>Active accreditations</span>
+          <small>Quality assured</small>
+        </article>
+        <article class="stat-card amber">
+          <span class="round-icon chart" aria-hidden="true"></span>
+          <strong id="home-stat-quality-partners">16</strong>
+          <span>SETA / Quality Partners</span>
+          <small>Working together</small>
+        </article>
+
+        <article class="panel map-panel home-map-card">
+          <div class="panel-head compact">
+            <div>
+              <h3>Providers across South Africa</h3>
+              <p>Explore where accredited providers are located</p>
+            </div>
+          </div>
+          <div class="map-area home-map">
+            <ul class="legend no-wrap">
+              <li><button class="province-legend-item" type="button" data-province="Gauteng" aria-pressed="false"><i class="c-red"></i><span>Gauteng</span></button></li>
+              <li><button class="province-legend-item" type="button" data-province="KwaZulu-Natal" aria-pressed="false"><i class="c-blue"></i><span>KwaZulu-Natal</span></button></li>
+              <li><button class="province-legend-item" type="button" data-province="Limpopo" aria-pressed="false"><i class="c-green"></i><span>Limpopo</span></button></li>
+              <li><button class="province-legend-item" type="button" data-province="Western Cape" aria-pressed="false"><i class="c-purple"></i><span>Western Cape</span></button></li>
+              <li><button class="province-legend-item" type="button" data-province="Eastern Cape" aria-pressed="false"><i class="c-pink"></i><span>Eastern Cape</span></button></li>
+              <li><button class="province-legend-item" type="button" data-province="Mpumalanga" aria-pressed="false"><i class="c-teal"></i><span>Mpumalanga</span></button></li>
+              <li><button class="province-legend-item" type="button" data-province="North West" aria-pressed="false"><i class="c-orange"></i><span>North West</span></button></li>
+              <li><button class="province-legend-item" type="button" data-province="Free State" aria-pressed="false"><i class="c-grey"></i><span>Free State</span></button></li>
+              <li><button class="province-legend-item" type="button" data-province="Northern Cape" aria-pressed="false"><i class="c-slate"></i><span>Northern Cape</span></button></li>
+            </ul>
+            <div class="sa-map bubbles" aria-label="South Africa provider map">
+              <img class="sa-outline-img" src="assets/south-africa-outline.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+              <span class="map-bubble province-bubble gauteng" data-province="Gauteng" role="button" tabindex="0" aria-label="Filter by Gauteng" aria-pressed="false"></span>
+              <span class="map-bubble province-bubble kzn" data-province="KwaZulu-Natal" role="button" tabindex="0" aria-label="Filter by KwaZulu-Natal" aria-pressed="false"></span>
+              <span class="map-bubble province-bubble limpopo" data-province="Limpopo" role="button" tabindex="0" aria-label="Filter by Limpopo" aria-pressed="false"></span>
+              <span class="map-bubble province-bubble western-cape" data-province="Western Cape" role="button" tabindex="0" aria-label="Filter by Western Cape" aria-pressed="false"></span>
+              <span class="map-bubble province-bubble eastern-cape" data-province="Eastern Cape" role="button" tabindex="0" aria-label="Filter by Eastern Cape" aria-pressed="false"></span>
+              <span class="map-bubble province-bubble mpumalanga" data-province="Mpumalanga" role="button" tabindex="0" aria-label="Filter by Mpumalanga" aria-pressed="false"></span>
+              <span class="map-bubble province-bubble north-west" data-province="North West" role="button" tabindex="0" aria-label="Filter by North West" aria-pressed="false"></span>
+              <span class="map-bubble province-bubble free-state" data-province="Free State" role="button" tabindex="0" aria-label="Filter by Free State" aria-pressed="false"></span>
+              <span class="map-bubble province-bubble northern-cape" data-province="Northern Cape" role="button" tabindex="0" aria-label="Filter by Northern Cape" aria-pressed="false"></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel partner-card partner-carousel" aria-label="SETA and Quality Partner carousel">
+          <div class="panel-head compact">
+            <div>
+              <h3>SETA / Quality Partner</h3>
+              <p>Swipe or use arrows to view partners</p>
+            </div>
+          </div>
+
+          <div class="partner-carousel-frame" id="home-partner-carousel" tabindex="0" aria-live="polite">
+            <button class="partner-nav partner-prev" type="button" aria-label="Previous quality partner">‹</button>
+
+            <div class="partner-slide">
+              <div class="partner-body">
+                <div class="partner-logo-frame partner-logo-wrap">
+                  <img id="home-partner-logo" src="data:image/png;base64,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" alt="Services SETA logo" loading="eager" decoding="async" fetchpriority="high" />
+                  <span id="home-partner-logo-fallback" class="partner-logo-instant">SERVICES</span>
+                </div>
+                <div class="partner-copy">
+                  <h2 id="home-partner-name">Services SETA</h2>
+                  <p id="home-partner-description">Services Sector Education and Training Authority</p>
+                </div>
+              </div>
+
+              <div class="partner-stats">
+                <span>Accredited programmes:<strong id="home-partner-programmes">52</strong></span>
+                <span>Active accreditations:<strong id="home-partner-active">2,585</strong></span>
+              </div>
+            </div>
+
+            <button class="partner-nav partner-next" type="button" aria-label="Next quality partner">›</button>
+          </div>
+
+        </article>
+      </section>
+
+      <section class="discovery-grid home-discovery-grid">
+        <article class="panel browse-card">
+          <h3>Explore careers</h3>
+          <p>Discover career options linked to qualifications.</p>
+          <div class="pill-grid two">
+            <button type="button" data-explore-career="Data Analyst"><span class="tile-icon blue-tile"></span>Data Analyst</button>
+            <button type="button" data-explore-career="Electrician"><span class="tile-icon amber-tile"></span>Electrician</button>
+            <button type="button" data-explore-career="Chef"><span class="tile-icon red-tile"></span>Chef</button>
+            <button type="button" data-explore-career="Care Worker"><span class="tile-icon violet-tile"></span>Care Worker</button>
+            <button type="button" data-explore-career="Office Administrator"><span class="tile-icon blue-tile"></span>Office Administrator</button>
+            <button type="button" data-explore-career="Welder"><span class="tile-icon purple-tile"></span>Welder</button>
+            <button type="button" data-explore-career="ECD Practitioner"><span class="tile-icon green-tile"></span>ECD Practitioner</button>
+            <button type="button" data-explore-career="Hairdresser"><span class="tile-icon pink-tile"></span>Hairdresser</button>
+            <button type="button" data-explore-career="Retail Sales Advisor"><span class="tile-icon teal-tile"></span>Retail Sales Advisor</button>
+          </div>
+          <a class="panel-link" href="#careers" data-view="careers">Open career map <span aria-hidden="true">&rsaquo;</span></a>
+        </article>
+
+        <article class="panel browse-card province-card">
+          <h3>Browse by province</h3>
+          <p>Find opportunities in your area.</p>
+          <div class="pill-grid two small-pills">
+            <button type="button" data-explore-province="Gauteng"><span class="tile-icon blue-tile"></span>Gauteng</button>
+            <button type="button" data-explore-province="Limpopo"><span class="tile-icon pink-tile"></span>Limpopo</button>
+            <button type="button" data-explore-province="KwaZulu-Natal"><span class="tile-icon blue-tile"></span>KwaZulu-Natal</button>
+            <button type="button" data-explore-province="Mpumalanga"><span class="tile-icon red-tile"></span>Mpumalanga</button>
+            <button type="button" data-explore-province="Western Cape"><span class="tile-icon teal-tile"></span>Western Cape</button>
+            <button type="button" data-explore-province="Free State"><span class="tile-icon green-tile"></span>Free State</button>
+            <button type="button" data-explore-province="Eastern Cape"><span class="tile-icon teal-tile"></span>Eastern Cape</button>
+            <button type="button" data-explore-province="North West"><span class="tile-icon red-tile"></span>North West</button>
+            <button type="button" data-explore-province="Northern Cape"><span class="tile-icon slate-tile"></span>Northern Cape</button>
+          </div>
+        </article>
+
+        <article class="panel browse-card pathway-card">
+          <h3>Career Families</h3>
+          <p>Browse career family groups from the dataset.</p>
+          <div class="pill-grid two tall-pills">
+            <button type="button" data-view="careers"><span class="tile-icon purple-tile"></span><b>Engineering, Manufacturing &amp; Trades</b><small>167 careers</small></button>
+            <button type="button" data-view="careers"><span class="tile-icon teal-tile"></span><b>Business, Administration &amp; Management</b><small>48 careers</small></button>
+            <button type="button" data-view="careers"><span class="tile-icon violet-tile"></span><b>Textiles, Clothing, Furniture &amp; Wood</b><small>42 careers</small></button>
+            <button type="button" data-view="careers"><span class="tile-icon pink-tile"></span><b>Health, Safety &amp; Community Services</b><small>38 careers</small></button>
+          </div>
+          <a class="panel-link" href="#careers" data-view="careers">View all career families <span aria-hidden="true">&rsaquo;</span></a>
+        </article>
+
+        <article class="panel browse-card quals-card">
+          <h3>Qualification types</h3>
+          <p>Browse qualification groups available in the dataset.</p>
+          <div class="pill-grid two tall-pills">
+            <button type="button" data-explore-qualification-prefix="Occupational Certificate"><span class="tile-icon green-tile"></span><b>Occupational Certificates</b><small>Full occupational qualifications</small></button>
+            <button type="button" data-explore-qualification-prefix="Advanced Occupational Certificate"><span class="tile-icon green-tile"></span><b>Advanced Occupational Certificates</b><small>Advanced occupational routes</small></button>
+            <button type="button" data-explore-qualification-prefix="Occupational Skills Programme"><span class="tile-icon green-tile"></span><b>Occupational Skills Programmes</b><small>Shorter occupational skills programmes</small></button>
+            <button type="button" data-explore-qualification-prefix="National Certificate"><span class="tile-icon green-tile"></span><b>National Certificates</b><small>National certificate qualifications</small></button>
+          </div>
+          <a class="panel-link" href="#explore" data-view="explore">View all qualification types <span aria-hidden="true">&rsaquo;</span></a>
+        </article>
+      </section>
+
+      <section class="bottom-cta">
+        <span class="cta-icon cap-line" aria-hidden="true"></span>
+        <div>
+          <h3>Learning opens doors. Skills unlock futures.</h3>
+          <p>Use our tools to explore, compare and connect with accredited providers you can trust.</p>
+        </div>
+        <div class="cta-actions">
+          <button class="secondary" type="button" data-view="careers"><span class="action-icon node-icon" aria-hidden="true"></span>Open career map</button>
+          <button class="primary" type="button" data-view="explore"><span class="action-icon magnify-icon" aria-hidden="true"></span>Find providers</button>
+        </div>
+      </section>
+    </section>
+
+    <section class="page-view" data-page="explore">
+      <section class="hero explore-hero">
+        <div class="hero-copy explore-copy">
+          <h1>Explore providers, qualifications, careers and pathways that can take you further.</h1>
+          <p>Discover trusted providers, quality assured qualifications and real career pathways across South Africa.</p>
+          <form class="search-bar explore-search-bar" aria-label="Search qualifications, careers and providers" autocomplete="off">
+            <span class="search-icon" aria-hidden="true"></span>
+            <input id="explore-search-input" type="text" value="" placeholder="Search qualifications, careers or providers" aria-label="Search qualifications, careers or providers" />
+            <button id="explore-search-button" type="button">Search</button>
+            <div id="explore-search-suggestions" class="search-suggestions" role="listbox" aria-label="Search suggestions" hidden></div>
+          </form>
+        </div>
+        <div class="hero-image" aria-hidden="true">
+          <img src="assets/qcto-hero-banner.webp" alt="" loading="lazy" decoding="async" />
+        </div>
+      </section>
+
+      <section class="callout thin">
+        <span class="callout-icon info" aria-hidden="true"></span>
+        <div class="callout-copy column">
+          <strong>Explore your preferred field, find accredited providers, and contact them about possible learnership opportunities.</strong>
+          <span>Use the filters to refine your search and discover quality assured qualifications and real career pathways.</span>
+        </div>
+      </section>
+
+      <section class="filter-bar explore-filter-bar" aria-label="Explore filters">
+        <label>
+          <span>Province</span>
+          <div class="select-like select-control"><i class="pin-icon"></i><select id="explore-filter-province" aria-label="Filter by province"><option value="">All</option></select><b aria-hidden="true"></b></div>
+        </label>
+        <label>
+          <span>Career</span>
+          <div class="select-like select-control"><i class="spark-icon"></i><select id="explore-filter-career" aria-label="Filter by career"><option value="">All</option></select><b aria-hidden="true"></b></div>
+        </label>
+        <label>
+          <span>City / Town</span>
+          <div class="select-like select-control"><i class="pin-icon"></i><select id="explore-filter-city-town" aria-label="Filter by city or town"><option value="">All</option></select><b aria-hidden="true"></b></div>
+        </label>
+        <label>
+          <span>Accreditation Status</span>
+          <div class="select-like select-control"><i class="star-icon"></i><select id="explore-filter-status" aria-label="Filter by accreditation status"><option value="">All</option></select><b aria-hidden="true"></b></div>
+        </label>
+        <label>
+          <span>SETA / Quality Partner</span>
+          <div class="select-like select-control"><i class="target-icon"></i><select id="explore-filter-partner" aria-label="Filter by SETA or Quality Partner"><option value="">All</option></select><b aria-hidden="true"></b></div>
+        </label>
+        <button class="clear-btn" id="explore-clear-filters" type="button"><span aria-hidden="true"></span>Clear all filters</button>
+      </section>
+
+      <section class="top-grid explore-top-grid">
+        <article class="stat-card red">
+          <span class="round-icon bank" aria-hidden="true"></span>
+          <strong id="explore-stat-accreditation-records">48,716</strong>
+          <span>Accreditation records</span>
+          <small>Verified &amp; active</small>
+        </article>
+        <article class="stat-card green">
+          <span class="round-icon group" aria-hidden="true"></span>
+          <strong id="explore-stat-unique-organisations">8,667</strong>
+          <span>Unique organisations</span>
+          <small>Training with impact</small>
+        </article>
+        <article class="stat-card blue">
+          <span class="round-icon award" aria-hidden="true"></span>
+          <strong id="explore-stat-active-accreditations">40,916</strong>
+          <span>Active accreditations</span>
+          <small>Quality assured</small>
+        </article>
+        <article class="stat-card amber">
+          <span class="round-icon chart" aria-hidden="true"></span>
+          <strong id="explore-stat-quality-partners">16</strong>
+          <span>SETA / Quality Partners</span>
+          <small>Working together</small>
+        </article>
+
+        <article class="panel map-panel explore-map-card explore-map">
+          <div class="glance-copy">
+            <h3>South Africa at a glance</h3>
+            <p>Explore training opportunities across all provinces.</p>
+          </div>
+          <div class="map-area compact-map">
+            <ul class="legend glance">
+              <li><button class="explore-legend-item" type="button" onclick="window.setExploreProvinceFilter && window.setExploreProvinceFilter(this.dataset.province, { toggle: true })" data-province="Gauteng" aria-pressed="false"><i class="c-red"></i><span>Gauteng</span></button></li>
+              <li><button class="explore-legend-item" type="button" onclick="window.setExploreProvinceFilter && window.setExploreProvinceFilter(this.dataset.province, { toggle: true })" data-province="KwaZulu-Natal" aria-pressed="false"><i class="c-blue"></i><span>KwaZulu-Natal</span></button></li>
+              <li><button class="explore-legend-item" type="button" onclick="window.setExploreProvinceFilter && window.setExploreProvinceFilter(this.dataset.province, { toggle: true })" data-province="Western Cape" aria-pressed="false"><i class="c-green"></i><span>Western Cape</span></button></li>
+              <li><button class="explore-legend-item" type="button" onclick="window.setExploreProvinceFilter && window.setExploreProvinceFilter(this.dataset.province, { toggle: true })" data-province="Eastern Cape" aria-pressed="false"><i class="c-purple"></i><span>Eastern Cape</span></button></li>
+              <li><button class="explore-legend-item" type="button" onclick="window.setExploreProvinceFilter && window.setExploreProvinceFilter(this.dataset.province, { toggle: true })" data-province="Limpopo" aria-pressed="false"><i class="c-pink"></i><span>Limpopo</span></button></li>
+              <li><button class="explore-legend-item" type="button" onclick="window.setExploreProvinceFilter && window.setExploreProvinceFilter(this.dataset.province, { toggle: true })" data-province="Mpumalanga" aria-pressed="false"><i class="c-orange"></i><span>Mpumalanga</span></button></li>
+              <li><button class="explore-legend-item" type="button" onclick="window.setExploreProvinceFilter && window.setExploreProvinceFilter(this.dataset.province, { toggle: true })" data-province="Free State" aria-pressed="false"><i class="c-grey"></i><span>Free State</span></button></li>
+              <li><button class="explore-legend-item" type="button" onclick="window.setExploreProvinceFilter && window.setExploreProvinceFilter(this.dataset.province, { toggle: true })" data-province="North West" aria-pressed="false"><i class="c-teal"></i><span>North West</span></button></li>
+              <li><button class="explore-legend-item" type="button" onclick="window.setExploreProvinceFilter && window.setExploreProvinceFilter(this.dataset.province, { toggle: true })" data-province="Northern Cape" aria-pressed="false"><i class="c-slate"></i><span>Northern Cape</span></button></li>
+            </ul>
+            <div class="sa-map provinces" aria-label="South Africa province map">
+              <object class="sa-province-img sa-province-object" data="assets/south-africa-provinces-v10.svg" type="image/svg+xml" aria-label="South Africa province map"></object>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel explore-results-panel">
+        <div class="explore-table-scroll" tabindex="0" aria-label="Scrollable provider results table">
+          <div id="explore-table-loading" class="explore-table-loading" role="status" aria-live="polite">
+            <span class="explore-loading-spinner" aria-hidden="true"></span>
+            <strong data-loading-text>Loading provider records...</strong>
+            <small>Please wait while the QCTO records are prepared.</small>
+          </div>
+          <table class="explore-results-table">
+            <colgroup>
+              <col class="col-provider">
+              <col class="col-province">
+              <col class="col-career">
+              <col class="col-qualification">
+              <col class="col-nqf">
+              <col class="col-partner">
+              <col class="col-status">
+              <col class="col-email">
+              <col class="col-contact">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Provider Name</th>
+                <th>Province</th>
+                <th>Career</th>
+                <th>Qualification Title</th>
+                <th>NQF Level</th>
+                <th>SETA / Partner</th>
+                <th>Status</th>
+                <th>Email</th>
+                <th>Contact</th>
+              </tr>
+            </thead>
+            <tbody id="explore-results-body"><tr><td colspan="9">Loading provider records...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="bottom-cta">
+        <span class="cta-icon cap-line" aria-hidden="true"></span>
+        <div>
+          <h3>Learning opens doors. Skills unlock futures.</h3>
+          <p>Use our tools to explore, compare and connect with accredited providers you can trust.</p>
+        </div>
+        <div class="cta-actions">
+          <button class="secondary" type="button" data-view="careers"><span class="action-icon node-icon" aria-hidden="true"></span>Open career map</button>
+          <button class="primary" type="button" data-view="explore"><span class="action-icon magnify-icon" aria-hidden="true"></span>Find providers</button>
+        </div>
+      </section>
+    </section>
+
+    <section class="page-view" data-page="careers">
+      <section class="hero careers-hero">
+        <div class="hero-copy career-copy">
+          <h1>Explore careers, families and pathways that fit your future.</h1>
+          <p>Discover career families, in-demand careers and the qualification routes that can take you there.</p>
+          <div class="career-search-wrap">
+            <form class="search-bar career-search" id="career-search-form" aria-label="Search careers" autocomplete="off">
+              <span class="search-icon" aria-hidden="true"></span>
+              <input id="career-search-input" type="text" value="" placeholder="Search careers" aria-label="Search careers" />
+              <button id="career-search-button" type="submit">Search</button>
+            </form>
+            <div id="career-search-suggestions" class="search-suggestions career-search-suggestions" role="listbox" aria-label="Career search suggestions" hidden></div>
+          </div>
+        </div>
+        <div class="hero-image" aria-hidden="true">
+          <img src="assets/qcto-hero-banner.webp" alt="" loading="lazy" decoding="async" />
+        </div>
+      </section>
+
+      <section class="callout thin careers-info-strip">
+        <span class="callout-icon briefcase-callout" aria-hidden="true"></span>
+        <div class="callout-copy column">
+          <strong>Explore career families, compare careers, and discover pathways that match your future goals.</strong>
+          <span>Browse career options, understand qualification routes, and find accredited providers that can help you get started.</span>
+        </div>
+      </section>
+
+      <section class="careers-main-grid">
+        <article class="panel career-families-panel">
+          <div class="career-card-head">
+            <h3>Browse career families</h3>
+          </div>
+          <div class="career-family-grid" aria-label="Career families based on the current dataset">
+            <button type="button" class="career-family-tile" data-career-family="Engineering, Manufacturing &amp; Trades" aria-haspopup="dialog"><span class="career-line-icon gear" aria-hidden="true"></span><strong>Engineering, Manufacturing &amp; Trades</strong><em>167 careers</em><small>Build, install, repair and maintain technical, trade and production systems.</small></button>
+            <button type="button" class="career-family-tile" data-career-family="Business, Administration &amp; Management" aria-haspopup="dialog"><span class="career-line-icon briefcase" aria-hidden="true"></span><strong>Business, Administration &amp; Management</strong><em>48 careers</em><small>Coordinate offices, projects, teams and organisational operations.</small></button>
+            <button type="button" class="career-family-tile" data-career-family="ICT &amp; Data" aria-haspopup="dialog"><span class="career-line-icon monitor" aria-hidden="true"></span><strong>ICT &amp; Data</strong><em>31 careers</em><small>Work with software, data, cloud, networks and digital systems.</small></button>
+            <button type="button" class="career-family-tile" data-career-family="Retail, Sales &amp; Customer Service" aria-haspopup="dialog"><span class="career-line-icon chart" aria-hidden="true"></span><strong>Retail, Sales &amp; Customer Service</strong><em>16 careers</em><small>Serve customers, support sales and manage retail/service experiences.</small></button>
+            <button type="button" class="career-family-tile" data-career-family="Transport, Logistics &amp; Supply Chain" aria-haspopup="dialog"><span class="career-line-icon route" aria-hidden="true"></span><strong>Transport, Logistics &amp; Supply Chain</strong><em>35 careers</em><small>Move people and goods, coordinate transport and support supply chains.</small></button>
+            <button type="button" class="career-family-tile" data-career-family="Health, Safety &amp; Community Services" aria-haspopup="dialog"><span class="career-line-icon heart" aria-hidden="true"></span><strong>Health, Safety &amp; Community Services</strong><em>38 careers</em><small>Support healthcare, safety, welfare and community services.</small></button>
+            <button type="button" class="career-family-tile" data-career-family="Hospitality, Tourism &amp; Food Services" aria-haspopup="dialog"><span class="career-line-icon cloche" aria-hidden="true"></span><strong>Hospitality, Tourism &amp; Food Services</strong><em>33 careers</em><small>Create guest experiences in food, travel, tourism and hospitality.</small></button>
+            <button type="button" class="career-family-tile" data-career-family="Finance, Banking &amp; Insurance" aria-haspopup="dialog"><span class="career-line-icon chart" aria-hidden="true"></span><strong>Finance, Banking &amp; Insurance</strong><em>19 careers</em><small>Work with financial records, banking, insurance and business controls.</small></button>
+            <button type="button" class="career-family-tile" data-career-family="Agriculture, Environment &amp; Natural Resources" aria-haspopup="dialog"><span class="career-line-icon gear" aria-hidden="true"></span><strong>Agriculture, Environment &amp; Natural Resources</strong><em>34 careers</em><small>Work with farming, natural resources, water, waste and environmental care.</small></button>
+            <button type="button" class="career-family-tile" data-career-family="Education, Training &amp; Human Development" aria-haspopup="dialog"><span class="career-line-icon user" aria-hidden="true"></span><strong>Education, Training &amp; Human Development</strong><em>22 careers</em><small>Support learning, training, development and human capability.</small></button>
+            <button type="button" class="career-family-tile" data-career-family="Media, Creative &amp; Communication" aria-haspopup="dialog"><span class="career-line-icon pencil" aria-hidden="true"></span><strong>Media, Creative &amp; Communication</strong><em>24 careers</em><small>Create, edit, design and communicate content and ideas.</small></button>
+            <button type="button" class="career-family-tile" data-career-family="Legal, Security &amp; Public Services" aria-haspopup="dialog"><span class="career-line-icon book" aria-hidden="true"></span><strong>Legal, Security &amp; Public Services</strong><em>22 careers</em><small>Support legal, public, safety, security and regulatory services.</small></button>
+            <button type="button" class="career-family-tile" data-career-family="Beauty, Wellness &amp; Personal Care" aria-haspopup="dialog"><span class="career-line-icon user" aria-hidden="true"></span><strong>Beauty, Wellness &amp; Personal Care</strong><em>14 careers</em><small>Provide grooming, wellness, hair, beauty and personal care services.</small></button>
+            <button type="button" class="career-family-tile" data-career-family="Construction, Property &amp; Facilities" aria-haspopup="dialog"><span class="career-line-icon tools" aria-hidden="true"></span><strong>Construction, Property &amp; Facilities</strong><em>24 careers</em><small>Build, maintain and manage property, buildings and facilities.</small></button>
+            <button type="button" class="career-family-tile" data-career-family="Mining, Energy &amp; Utilities" aria-haspopup="dialog"><span class="career-line-icon gear" aria-hidden="true"></span><strong>Mining, Energy &amp; Utilities</strong><em>16 careers</em><small>Support mining, energy, water and utility operations.</small></button>
+            <button type="button" class="career-family-tile" data-career-family="Textiles, Clothing, Furniture &amp; Wood" aria-haspopup="dialog"><span class="career-line-icon tools" aria-hidden="true"></span><strong>Textiles, Clothing, Furniture &amp; Wood</strong><em>42 careers</em><small>Produce textiles, garments, leather, furniture and wood-based products.</small></button>
+          </div>
+        </article>
+
+        <article class="panel popular-careers-panel">
+          <div class="career-card-head">
+            <h3>All careers</h3>
+          </div>
+          <div class="career-list career-list-scroll" id="popular-careers-list" aria-label="All careers available in the current dataset">
+            <button class="career-row" type="button"><span class="career-line-icon chart" aria-hidden="true"></span><span class="career-row-copy"><strong>Loading careers...</strong><small>Preparing dataset careers</small></span><span class="career-chevron" aria-hidden="true">&rsaquo;</span></button>
+          </div>
+        </article>
+
+        <article class="panel how-careers-work-panel">
+          <div class="career-card-head">
+            <h3>How this page works</h3>
+          </div>
+          <div class="career-steps">
+            <div class="career-step"><span class="step-number">1</span><span class="career-line-icon grid" aria-hidden="true"></span><div><strong>Choose a career family</strong><small>Browse broad fields that match your interests.</small></div></div>
+            <div class="career-step"><span class="step-number">2</span><span class="career-line-icon search-small" aria-hidden="true"></span><div><strong>Explore careers</strong><small>Open careers to see what they involve.</small></div></div>
+            <div class="career-step"><span class="step-number">3</span><span class="career-line-icon route" aria-hidden="true"></span><div><strong>View pathways</strong><small>See qualifications and routes into that career.</small></div></div>
+            <div class="career-step"><span class="step-number">4</span><span class="career-line-icon pin" aria-hidden="true"></span><div><strong>Find providers</strong><small>Discover accredited providers that can help you start.</small></div></div>
+          </div>
+          <div class="how-tip provider-next-step">
+            <span class="how-tip-icon" aria-hidden="true"></span>
+            <div>
+              <strong>Next step: contact a provider</strong>
+              <p>Once you find a career or pathway that interests you, contact an accredited training provider to ask whether they offer the related qualification or learnership. You can also ask about requirements, availability and application steps.</p>
+              <a href="#explore" data-view="explore" class="how-tip-link">Find providers <span aria-hidden="true">&rsaquo;</span></a>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="bottom-cta">
+        <span class="cta-icon map-line" aria-hidden="true"></span>
+        <div>
+          <h3>Not sure where to start?</h3>
+          <p>Use our tools to explore, compare and plan your career journey.</p>
+        </div>
+        <div class="cta-actions">
+          <button class="primary" type="button" data-view="explore"><span class="action-icon magnify-icon" aria-hidden="true"></span>Find providers</button>
+        </div>
+      </section>
+    </section>
+
+    <section class="page-view" data-page="about">
+      <section class="hero about-hero">
+        <div class="hero-copy about-copy">
+          <h1>About the South African Accredited Skills Development Providers Platform</h1>
+          <p>A trusted, accessible hub of accredited training providers, quality assured qualifications and real career pathways, empowering South Africans to learn, grow and thrive.</p>
+          <button class="primary hero-button" type="button" data-view="explore">Start exploring <span aria-hidden="true">&rarr;</span></button>
+        </div>
+        <div class="hero-image" aria-hidden="true">
+          <img src="assets/qcto-hero-banner.webp" alt="" loading="lazy" decoding="async" />
+        </div>
+      </section>
+
+      <section class="callout about-callout">
+        <span class="callout-icon cap-big about-svg-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/><path d="M22 10v6"/></svg>
+        </span>
+        <div class="callout-copy column">
+          <strong>Learnerships open doors. Skills unlock futures.</strong>
+          <span>This platform connects you to quality assured qualifications and accredited providers so you can take the next step towards meaningful work and a brighter tomorrow.</span>
+        </div>
+      </section>
+
+      <section class="about-grid">
+        <article class="panel about-info-card">
+          <span class="round-icon bank about-svg-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M4 10h16"/><path d="M6 10v8"/><path d="M10 10v8"/><path d="M14 10v8"/><path d="M18 10v8"/><path d="M12 3 4 8h16z"/></svg>
+          </span>
+          <h3>What is QCTO?</h3>
+          <p>The Quality Council for Trades and Occupations (QCTO) is the quality assurance body for trades, occupations and skills development in South Africa.</p>
+          <p>We work with our partners to ensure that qualifications and training meet national standards and support the development of a capable, future-ready workforce.</p>
+          <a class="external-link" href="https://www.qcto.org.za/" target="_blank" rel="noopener noreferrer">Visit the QCTO website <span aria-hidden="true">&nearr;</span></a>
+        </article>
+
+        <article class="panel about-info-card">
+          <span class="round-icon data about-svg-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="7" ry="3"/><path d="M5 5v6c0 1.7 3.1 3 7 3s7-1.3 7-3V5"/><path d="M5 11v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></svg>
+          </span>
+          <h3>About the data</h3>
+          <p>The information on this platform is sourced from the official QCTO public datasets, including accredited providers, qualifications and quality partners.</p>
+          <p>Data is refreshed regularly to help you make informed decisions based on the latest available information.</p>
+          <a class="external-link" href="https://www.qcto.org.za/databases-of-sdps.html" target="_blank" rel="noopener noreferrer">Explore our data sources <span aria-hidden="true">&nearr;</span></a>
+        </article>
+
+        <article class="panel about-info-card">
+          <span class="round-icon idea about-svg-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M8.5 14.5a6 6 0 1 1 7 0c-.8.6-1.2 1.5-1.2 2.5H9.7c0-1-.4-1.9-1.2-2.5z"/><path d="M12 2v2M4.9 4.9 6.3 6.3M19.1 4.9l-1.4 1.4"/></svg>
+          </span>
+          <h3>Why this platform was created</h3>
+          <p>Finding the right qualification or provider shouldn&rsquo;t be difficult.</p>
+          <p>This platform was created to make it easier for learners, job seekers and career changers to discover trusted opportunities, understand career pathways and connect with accredited providers about learnerships.</p>
+          <a class="external-link" href="#explore" data-view="explore">Explore <span aria-hidden="true">&nearr;</span></a>
+        </article>
+
+        <article class="panel about-info-card creator-card">
+          <span class="round-icon creator about-svg-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>
+          </span>
+          <h3>About the creator</h3>
+          <p>Hello! I&rsquo;m Johanne Maziya, based in Krugersdorp, Gauteng.</p>
+          <p>I&rsquo;m an aspiring data analyst and data science practitioner with a passion for using data and technology to solve real-world problems.</p>
+          <p>This project aims to help people explore qualifications, understand career-to-qualification pathways and contact accredited providers about possible learnership opportunities.</p>
+        </article>
+      </section>
+
+      <section class="panel creator-social-strip">
+        <div>
+          <h3>Connect with the creator</h3>
+          <p>Follow the project journey and future updates.</p>
+        </div>
+        <div class="creator-socials">
+          <a href="https://www.linkedin.com/in/johannemaziya" target="_blank" rel="noopener noreferrer" class="social-link social-linkedin" aria-label="Open Johanne Maziya on LinkedIn">
+            <span class="social-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.5h4v11H3v-11Zm6.2 0H13v1.6c.6-.9 1.7-1.9 3.7-1.9 4 0 4.7 2.6 4.7 6v5.3h-4v-4.7c0-1.1 0-2.6-1.6-2.6s-1.9 1.2-1.9 2.5v4.8H9.2v-11Z"/></svg>
+            </span>
+            <span>Johanne Maziya</span>
+          </a>
+          <a href="https://x.com/jxhann_" target="_blank" rel="noopener noreferrer" class="social-link social-x" aria-label="Open @jxhann_ on X">
+            <span class="social-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false"><path d="M17.7 3h3.1l-6.8 7.8 8 10.2h-6.3l-4.9-6.3L5.2 21H2.1l7.3-8.3L1.7 3h6.5l4.4 5.7L17.7 3Zm-1.1 16.2h1.7L7.3 4.7H5.5l11.1 14.5Z"/></svg>
+            </span>
+            <span>@jxhann_</span>
+          </a>
+          <a href="https://instagram.com/jxhannnnnnnn" target="_blank" rel="noopener noreferrer" class="social-link social-instagram" aria-label="Open @jxhannnnnnnn on Instagram">
+            <span class="social-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Zm4.5 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Zm0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Zm5-2.2a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Z"/></svg>
+            </span>
+            <span>@jxhannnnnnnn</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="bottom-cta about-final">
+        <span class="cta-icon about-bottom-cta-icon about-svg-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/><path d="M22 10v5"/><path d="M18.5 4.5v3"/><path d="M17 6h3"/></svg>
+        </span>
+        <div>
+          <h3>Let&rsquo;s build a skilled South Africa, together.</h3>
+          <p>Whether you&rsquo;re starting your journey or taking the next step, we&rsquo;re here to help you go further.</p>
+        </div>
+        <div class="cta-actions">
+          <button class="secondary" type="button" data-view="careers"><span class="action-icon book-icon about-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 18-6 3V6l6-3 6 3 6-3v15l-6 3z"/><path d="M9 3v15M15 6v15"/><circle cx="17.5" cy="10" r="1.8"/><path d="M17.5 12.2v3"/></svg></span>Open career map</button>
+          <button class="primary" type="button" data-view="explore"><span class="action-icon magnify-icon about-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg></span>Find providers</button>
+        </div>
+      </section>
+    </section>
+    <div class="career-family-modal" id="career-family-modal" hidden aria-hidden="true">
+      <div class="career-family-modal__backdrop" data-close-career-family-modal></div>
+      <section class="career-family-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="career-family-modal-title">
+        <button class="career-family-modal__close" type="button" data-close-career-family-modal aria-label="Close career family popup">&times;</button>
+        <div class="career-family-modal__head">
+          <span class="career-line-icon grid" id="career-family-modal-icon" aria-hidden="true"></span>
+          <div>
+            <h3 id="career-family-modal-title">Career family</h3>
+            <p id="career-family-modal-summary">Choose a career to view matching providers on Explore.</p>
+          </div>
+        </div>
+        <div class="career-family-modal__roles" id="career-family-modal-roles" aria-label="Careers in this family"></div>
+      </section>
+    </div>
+    <div class="ai-assistant-modal" id="ai-assistant-modal" hidden aria-hidden="true">
+      <div class="ai-assistant-modal__backdrop" data-close-ai-assistant></div>
+      <section class="ai-assistant-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="ai-assistant-title">
+        <button class="ai-assistant-modal__close" type="button" data-close-ai-assistant aria-label="Close AI assistant">&times;</button>
+        <div class="ai-assistant-modal__head">
+          <span class="ai-assistant-entry-icon" aria-hidden="true">AI</span>
+          <div>
+            <h3 id="ai-assistant-title">Gemma Learnership Assistant</h3>
+            <p>Ask about careers, qualifications or providers. The assistant uses your QCTO SDP platform data.</p>
+          </div>
+        </div>
+        <div class="ai-example-prompts" aria-label="Example AI questions">
+          <button type="button" data-ai-example="I live in Gauteng and I am interested in computers. What learnership path can I look for?">IT in Gauteng</button>
+          <button type="button" data-ai-example="I have matric and I want a business administration learnership near Johannesburg.">Business admin</button>
+          <button type="button" data-ai-example="I am in KwaZulu-Natal and I am interested in hospitality or cooking.">Hospitality in KZN</button>
+        </div>
+        <form class="ai-assistant-form" id="ai-assistant-form">
+          <textarea id="ai-assistant-input" rows="4" maxlength="800" placeholder="Example: I live in Limpopo and I like working with computers. What career path and providers can I explore?" required></textarea>
+          <button class="primary" type="submit">Ask Gemma</button>
+        </form>
+        <div class="ai-assistant-status" id="ai-assistant-status" role="status" aria-live="polite"></div>
+        <div class="ai-assistant-result" id="ai-assistant-result" hidden>
+          <h4>Assistant guidance</h4>
+          <div class="ai-answer" id="ai-assistant-answer"></div>
+          <div class="ai-provider-matches" id="ai-provider-matches"></div>
+          <button class="primary ai-explore-more-button" type="button" id="ai-open-explore-button">Explore more providers</button>
+          <div class="ai-message-template" id="ai-message-template" hidden>
+            <h4>Provider enquiry message</h4>
+            <pre id="ai-message-template-text"></pre>
+          </div>
+        </div>
+        <p class="ai-assistant-note">Important: accreditation does not guarantee a current learnership intake. Always contact the provider directly to confirm availability, requirements and application dates.</p>
+      </section>
+    </div>
+
+  </main>
+
+  <script src="assets/home-province-stats.js" defer></script>
+  <script src="assets/home-partners.js" defer></script>
+  <script src="assets/home-partner-province-stats.js" defer></script>
+  <script src="script.js?v=14" defer></script>
+</body>
+</html>
