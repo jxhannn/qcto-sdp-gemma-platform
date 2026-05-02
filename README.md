@@ -11,7 +11,7 @@ The project combines a Power BI-inspired dashboard design, a searchable web inte
 Add the live Netlify link here:
 
 ```text
-https://your-site-name.netlify.app
+https://qcto-sdp-gemma-platform.netlify.app/
 ```
 
 ## Repository
@@ -19,7 +19,7 @@ https://your-site-name.netlify.app
 Add the GitHub repository link here:
 
 ```text
-https://github.com/your-username/your-repository-name
+https://github.com/jxhannn/qcto-sdp-gemma-platform
 ```
 
 ---
