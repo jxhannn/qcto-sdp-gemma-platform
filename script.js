@@ -3958,7 +3958,7 @@
       if (status) {
         status.textContent = data.usedGemma
           ? "Gemma response ready."
-          : "Fast guidance ready from your QCTO project data.";
+          : "Fast guidance ready from the QCTO project data.";
       }
       if (result) result.hidden = false;
     } catch (error) {

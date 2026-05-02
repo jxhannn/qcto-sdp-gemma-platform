@@ -7775,3 +7775,22 @@ body.career-family-modal-open {
 .partner-logo-wrap img#home-partner-logo[hidden] {
   display: none !important;
 }
+
+/* =========================================================
+   v16 final wording/layout polish
+   Move Explore province legend away from the title copy without
+   changing the overall map-card design.
+   ========================================================= */
+@media (min-width: 769px) {
+  .page-view[data-page="explore"] .explore-map-card {
+    grid-template-columns: 230px minmax(0, 1fr);
+  }
+
+  .page-view[data-page="explore"] .compact-map {
+    padding-left: 26px;
+  }
+
+  .page-view[data-page="explore"] .compact-map .legend {
+    margin-left: 0;
+  }
+}
