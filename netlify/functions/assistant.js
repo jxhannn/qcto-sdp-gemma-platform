@@ -1,7 +1,11 @@
 const fs = require("fs");
 const path = require("path");
 
-const DATA_PATH = path.join(__dirname, "data", "providers_compact.json");
+const DATA_CANDIDATE_PATHS = [
+  path.join(__dirname, "data", "providers_compact.json"),
+  path.join(process.cwd(), "netlify", "functions", "data", "providers_compact.json"),
+  path.join(process.cwd(), "providers_compact.json")
+];
 let PROVIDERS_CACHE = null;
 
 const DEFAULT_MODEL = "gemma-4-26b-a4b-it";
@@ -118,14 +122,22 @@ function jsonResponse(statusCode, body) {
 
 function loadProviders() {
   if (PROVIDERS_CACHE) return PROVIDERS_CACHE;
-  try {
-    const raw = fs.readFileSync(DATA_PATH, "utf8");
-    const data = JSON.parse(raw);
-    PROVIDERS_CACHE = Array.isArray(data) ? data : [];
-  } catch (error) {
-    console.error("Could not load provider data", error);
-    PROVIDERS_CACHE = [];
+
+  for (const candidatePath of DATA_CANDIDATE_PATHS) {
+    try {
+      if (!fs.existsSync(candidatePath)) continue;
+      const raw = fs.readFileSync(candidatePath, "utf8");
+      const data = JSON.parse(raw);
+      PROVIDERS_CACHE = Array.isArray(data) ? data : [];
+      console.log(`Loaded provider data: ${PROVIDERS_CACHE.length} records from ${candidatePath}`);
+      return PROVIDERS_CACHE;
+    } catch (error) {
+      console.error(`Could not load provider data from ${candidatePath}`, error);
+    }
   }
+
+  console.error("Provider data file was not found. Make sure netlify/functions/data/providers_compact.json is uploaded and included in Netlify Functions.");
+  PROVIDERS_CACHE = [];
   return PROVIDERS_CACHE;
 }
 
@@ -1107,6 +1119,7 @@ async function buildAssistantResponse(message) {
     answer: gemma.answer,
     usedGemma: Boolean(gemma.usedGemma),
     warning: gemma.warning || "",
+    providerDataLoaded: loadProviders().length,
     detectedProvince,
     detectedCityTown,
     intentKey: detectedIntent.key,

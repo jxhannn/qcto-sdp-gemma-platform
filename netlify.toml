@@ -6,3 +6,6 @@
   publish = "."
   functions = "netlify/functions"
   port = 8888
+
+[functions]
+  included_files = ["netlify/functions/data/providers_compact.json"]
