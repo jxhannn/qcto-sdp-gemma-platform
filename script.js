@@ -4004,6 +4004,7 @@
 
   function setLoading(isLoading) {
     form.classList.toggle("is-loading", isLoading);
+    if (status) status.classList.toggle("is-busy", isLoading);
     const submit = form.querySelector("button[type='submit']");
     if (submit) submit.disabled = isLoading;
     input.disabled = isLoading;
@@ -4117,7 +4118,7 @@
     if (!message) return;
 
     setLoading(true);
-    if (status) status.textContent = "Asking Gemma and checking the provider data...";
+    if (status) status.textContent = "Asking Gemma and checking the provider data";
     if (result) result.hidden = true;
 
     try {

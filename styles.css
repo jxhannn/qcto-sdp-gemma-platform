@@ -7232,6 +7232,27 @@ body.career-family-modal-open {
   font-weight: 800;
 }
 
+.ai-assistant-status.is-busy {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ai-assistant-status.is-busy::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(239, 64, 35, 0.18);
+  border-top-color: var(--red);
+  border-radius: 999px;
+  flex: 0 0 auto;
+  animation: aiStatusSpin 0.8s linear infinite;
+}
+
+@keyframes aiStatusSpin {
+  to { transform: rotate(360deg); }
+}
+
 .ai-assistant-result {
   border-top: 1px solid #edf2f7;
   padding-top: 14px;
@@ -8182,7 +8203,7 @@ body.large-table-open {
   }
 }
 
-/* v22: AI assistant enquiry message style chooser */
+/* v23: AI assistant loading spinner and enquiry message style chooser */
 .ai-message-template__head {
   display: flex;
   align-items: center;
