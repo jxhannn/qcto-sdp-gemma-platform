@@ -321,8 +321,10 @@ function getIctFocusKey(query) {
   const q = normalise(query);
   const signals = getIctFocusSignals(q);
   const active = Object.entries(signals).filter(([, value]) => value).map(([key]) => key);
-  const comparingOptions = /\b(choose|decide|which one|not sure|don t know|don't know|or)\b/.test(q);
-  if (active.length > 1 && comparingOptions) return "general-ict";
+  const comparingOptions = /\b(choose|decide|which one|not sure|don t know|don't know|or|and)\b|\//.test(q);
+  // If the user names two or more ICT interests, keep the answer inside those named interests.
+  // Example: "cybersecurity or cloud" should not suddenly show every ICT field.
+  if (active.length > 1 && comparingOptions) return "multi-ict";
   if (signals.cloud) return "cloud";
   if (signals.cyber) return "cyber";
   if (signals.data) return "data";
@@ -340,37 +342,30 @@ function getIctFocus(query) {
   if (focus === "software") return "software development";
   if (focus === "network") return "networking";
   if (focus === "support") return "IT support / computer support";
+  if (focus === "multi-ict") return "the ICT areas you mentioned";
   return "computer / ICT options";
 }
 
 function rowMatchesIctFocus(row, query) {
   const text = rowIntentText(row);
-  const focus = getIctFocusKey(query);
+  const q = normalise(query);
+  const focus = getIctFocusKey(q);
 
-  if (focus === "cloud") {
-    return /\b(cloud|network|computer|digital|software|data science|data analyst|cybersecurity|information technology|systems development|artificial intelligence)\b/i.test(text);
+  const matchers = {
+    cloud: () => /\b(cloud|cloud administrator)\b/i.test(text),
+    cyber: () => /\b(cyber|cybersecurity|information security)\b/i.test(text),
+    data: () => /\b(data science|data analyst|data analytics|database administrator)\b/i.test(text),
+    software: () => /\b(software developer|software engineer|systems developer|systems development|programmer|programming|coding)\b/i.test(text) || (/\b(artificial intelligence|ai software)\b/i.test(text) && /\b(ai|artificial intelligence)\b/.test(q)),
+    network: () => /\b(network|networking|5g|cellular|telecommunications)\b/i.test(text),
+    support: () => /\b(computer and digital support|computer technician|it support|technical support|help desk|helpdesk|computer support|digital support)\b/i.test(text)
+  };
+
+  if (focus === "multi-ict") {
+    const signals = getIctFocusSignals(q);
+    return Object.entries(signals).some(([key, isActive]) => isActive && matchers[key] && matchers[key]());
   }
 
-  if (focus === "cyber") {
-    return /\b(cyber|cybersecurity|information security)\b/i.test(text);
-  }
-
-  if (focus === "data") {
-    return /\b(data science|data analyst|data|analytics|database|artificial intelligence|ai)\b/i.test(text);
-  }
-
-  if (focus === "software") {
-    return /\b(software|developer|programmer|programming|coding|systems development|systems developer|artificial intelligence|ai)\b/i.test(text);
-  }
-
-  if (focus === "network") {
-    return /\b(network|networking|5g|cellular|telecommunications|computer|digital|information technology)\b/i.test(text);
-  }
-
-  if (focus === "support") {
-    return /\b(computer and digital support|computer technician|it support|technical support|help desk|helpdesk|computer support|digital support|information technology)\b/i.test(text);
-  }
-
+  if (matchers[focus]) return matchers[focus]();
   return true;
 }
 
@@ -378,12 +373,24 @@ function getExploreKeywordsForIntent(intent, message) {
   if (!intent || !intent.key || intent.key === "general") return [];
   if (intent.key === "ict") {
     const focus = intent.focusKey || getIctFocusKey(message || "");
-    if (focus === "cloud") return ["cloud", "cloud administrator", "network", "information technology", "computer", "digital"];
+    if (focus === "cloud") return ["cloud", "cloud administrator"];
     if (focus === "cyber") return ["cybersecurity", "cyber", "information security"];
-    if (focus === "data") return ["data analyst", "data science", "data", "analytics", "database", "artificial intelligence"];
-    if (focus === "software") return ["software", "developer", "programmer", "programming", "coding", "systems development", "artificial intelligence"];
-    if (focus === "network") return ["network", "networking", "5g", "cellular", "telecommunications", "computer", "digital"];
-    if (focus === "support") return ["computer and digital support", "computer technician", "it support", "technical support", "digital support", "information technology"];
+    if (focus === "data") return ["data analyst", "data science", "data analytics", "database"];
+    if (focus === "software") return ["software developer", "software engineer", "systems developer", "systems development", "programmer", "programming", "coding"];
+    if (focus === "network") return ["network", "networking", "5g", "cellular", "telecommunications"];
+    if (focus === "support") return ["computer and digital support", "computer technician", "it support", "technical support", "digital support"];
+    if (focus === "multi-ict") {
+      const q = normalise(message || "");
+      const signals = getIctFocusSignals(q);
+      const keywords = [];
+      if (signals.cloud) keywords.push("cloud", "cloud administrator");
+      if (signals.cyber) keywords.push("cybersecurity", "cyber", "information security");
+      if (signals.data) keywords.push("data analyst", "data science", "data analytics", "database");
+      if (signals.software) keywords.push("software developer", "software engineer", "systems developer", "programming", "coding");
+      if (signals.network) keywords.push("network", "networking", "5g", "telecommunications");
+      if (signals.support) keywords.push("computer and digital support", "computer technician", "it support", "technical support");
+      return uniqueCompact(keywords, 14);
+    }
     return ["computer", "digital", "computer and digital support", "computer technician", "software", "developer", "data", "cloud", "cybersecurity", "network", "information technology", "artificial intelligence"];
   }
   if (intent.key === "practical" && intent.focusKey === "hands-on") return ["plant operator", "construction plant operator", "freight handler", "warehouse", "housekeeper", "commercial cleaner", "cleaner", "food handler", "kitchen hand", "care worker", "social auxiliary worker", "beauty", "hairdresser", "welder", "plumbing hand", "assistant handyperson"];
@@ -906,26 +913,26 @@ function buildGeneralFallback(message, detectedProvince = "", detectedCityTown =
   const locationLine = detectedCityTown ? ` near ${detectedCityTown}` : detectedProvince ? ` in ${detectedProvince}` : "";
 
   if (/\b(computer|computers|technology|data|cloud|ict|digital|software|cyber|network|it)\b/.test(q)) {
-    return `Because you are interested in computers${locationLine}, useful learnership paths to explore include computer and digital support, computer technician, software development, data analytics, cloud administration, cybersecurity and network-related ICT roles. Search the Explore page using the ICT filter results, then contact providers directly. Accreditation does not guarantee a current learnership intake, so always confirm availability, requirements and application dates with the provider.`;
+    return `Because you are interested in computers${locationLine}, useful learnership paths to explore include computer and digital support, computer technician, software development, data analytics, cloud administration, cybersecurity and network-related ICT roles. Search the Explore page using the ICT filter results, then contact providers directly. Accreditation does not guarantee funding or a current learnership intake, so always confirm availability, requirements and application dates with the provider.`;
   }
 
   if (/\b(business|admin|administration|office)\b/.test(q)) {
-    return `For business or administration${locationLine}, explore paths linked to office administration, business administration, management assistant, project support and public administration. Search for accredited providers in your province, then contact them directly to confirm current learnership availability. Accreditation does not guarantee an open intake.`;
+    return `For business or administration${locationLine}, explore paths linked to office administration, business administration, management assistant, project support and public administration. Search for accredited providers in your province, then contact them directly to confirm current learnership availability. Accreditation does not guarantee funding or an open intake.`;
   }
 
   if (/\b(hospitality|cook|cooking|tourism)\b/.test(q)) {
-    return `For hospitality or cooking${locationLine}, explore paths linked to hospitality services, food preparation, chef/cook training, accommodation and tourism. Use the platform to find accredited providers, then contact them directly to confirm whether they currently have learnership opportunities. Accreditation does not guarantee an open intake.`;
+    return `For hospitality or cooking${locationLine}, explore paths linked to hospitality services, food preparation, chef/cook training, accommodation and tourism. Use the platform to find accredited providers, then contact them directly to confirm whether they currently have learnership opportunities. Accreditation does not guarantee funding or an open intake.`;
   }
 
   if (/\b(finance|accounting|bookkeeping|payroll|banking)\b/.test(q)) {
-    return `For finance or accounting${locationLine}, explore paths such as accounting, bookkeeping, payroll, financial administration, banking and insurance support. Contact accredited providers directly to confirm current learnership availability and requirements. Accreditation does not guarantee an open intake.`;
+    return `For finance or accounting${locationLine}, explore paths such as accounting, bookkeeping, payroll, financial administration, banking and insurance support. Contact accredited providers directly to confirm current learnership availability and requirements. Accreditation does not guarantee funding or an open intake.`;
   }
 
   if (/\b(construction|building|civil|plumbing|electrician|welding|carpentry)\b/.test(q)) {
-    return `For construction or trades${locationLine}, explore paths such as building, civil construction, plumbing, electrical work, welding, carpentry and other artisan-related qualifications. Contact providers directly to confirm active learnership opportunities. Accreditation does not guarantee an open intake.`;
+    return `For construction or trades${locationLine}, explore paths such as building, civil construction, plumbing, electrical work, welding, carpentry and other artisan-related qualifications. Contact providers directly to confirm active learnership opportunities. Accreditation does not guarantee funding or an open intake.`;
   }
 
-  return `Use the platform to search by province, career field, qualification or provider name. After finding accredited providers, contact them directly to confirm current learnership availability, requirements and application dates. Accreditation does not automatically mean that a learnership intake is currently open.`;
+  return `Use the platform to search by province, career field, qualification or provider name. After finding accredited providers, contact them directly to confirm current learnership availability, requirements and application dates. Accreditation does not automatically mean funding or that a learnership intake is currently open.`;
 }
 
 function buildFallbackAnswer(message, matches, detectedProvince, intent, detectedCityTown = "", hasLocalMatches = true) {
@@ -947,13 +954,49 @@ function buildFallbackAnswer(message, matches, detectedProvince, intent, detecte
 
   if ((detectedProvince || detectedCityTown) && !hasLocalMatches) intro += " I could not find enough exact local matches, so I included the closest relevant records from other areas.";
 
-  return `${intro}\n\nRelated qualifications include:\n${qualifications.map((q) => `• ${q}`).join("\n")}\n\nPossible providers from the platform records:\n${providers.map((p) => `• ${p}`).join("\n")}\n\nNext steps:\n1. Explore more matching providers on the Explore page.\n2. Contact the provider directly to confirm whether they currently have a learnership intake.\n3. Ask about requirements, application dates and supporting documents.\n\nImportant: accreditation does not guarantee that a provider currently has an open learnership.`;
+  return `${intro}\n\nRelated qualifications include:\n${qualifications.map((q) => `• ${q}`).join("\n")}\n\nPossible providers from the platform records:\n${providers.map((p) => `• ${p}`).join("\n")}\n\nNext steps:\n1. Explore more matching providers on the Explore page.\n2. Contact the provider directly to confirm whether they currently have a learnership intake.\n3. Ask about requirements, application dates and supporting documents.\n\nImportant: accreditation does not guarantee funding or that a provider currently has an open learnership.`;
+}
+
+function buildMessageTemplates(matches) {
+  const first = matches[0] || {};
+  const qualification = first.qualificationTitle || "the relevant qualification";
+
+  return {
+    confident: {
+      label: "Confident & direct",
+      body: `Good day,
+
+I found your institution listed in the QCTO SDP records for ${qualification}. I understand that accreditation does not guarantee a current intake, so I would like to confirm whether you have any learnership, training intake or upcoming application window for this programme.
+
+Please share the entry requirements, application dates, documents needed and the steps I should follow to apply.
+
+Kind regards`
+    },
+    warm: {
+      label: "Warm & enthusiastic",
+      body: `Good day,
+
+I hope you are well. I am interested in ${qualification} and saw that your institution is linked to this programme in the QCTO SDP records. I would appreciate your guidance on whether there are any current or upcoming learnership opportunities.
+
+Please advise on the requirements, application dates, documents needed and how I can apply.
+
+Kind regards`
+    },
+    brief: {
+      label: "Brief & punchy",
+      body: `Good day,
+
+Please confirm whether your institution currently has a learnership or training intake for ${qualification}.
+
+Kindly share the requirements, application dates, documents needed and next steps to apply.
+
+Kind regards`
+    }
+  };
 }
 
 function buildMessageTemplate(matches) {
-  const first = matches[0] || {};
-  const qualification = first.qualificationTitle || "the relevant qualification";
-  return `Good day,\n\nI would like to enquire whether your institution currently offers learnership opportunities or training intake for ${qualification}.\n\nPlease advise on the requirements, application dates, availability and the steps I should follow to apply.\n\nKind regards`;
+  return buildMessageTemplates(matches).confident.body;
 }
 
 function uniqueCompact(values, max = 14) {
@@ -1056,7 +1099,8 @@ async function callGemma(message, matches, detectedProvince, intent, detectedCit
   const prompt = `You are Gemma Learnership Assistant for a South African QCTO SDP platform.
 Use only these records. Do not invent providers, contact details, SETAs, provinces or qualifications.
 Keep the answer under 130 words.
-Always say accreditation does not guarantee a current learnership intake.
+If the user asks for a specific career, qualification or focus area, stay inside that focus. Only suggest multiple pathways when the user asks broadly or mentions several interests.
+Always say accreditation does not guarantee funding or a current learnership intake.
 
 User question: ${message}
 Province: ${detectedProvince || "Not detected"}
@@ -1127,6 +1171,7 @@ async function buildAssistantResponse(message) {
     keywords,
     matches: matches.slice(0, 6),
     messageTemplate: buildMessageTemplate(matches),
+    messageTemplates: buildMessageTemplates(matches),
     exploreFilters: buildExploreFilters(matches, detectedProvince, detectedIntent, message, detectedCityTown)
   });
 }
@@ -1164,6 +1209,7 @@ exports.handler = async function handler(event) {
       keywords: tokenize(message).slice(0, 12),
       matches: [],
       messageTemplate: buildMessageTemplate([]),
+      messageTemplates: buildMessageTemplates([]),
       exploreFilters: buildExploreFilters([], detectedProvince, intent, message, detectedCityTown)
     });
   }
