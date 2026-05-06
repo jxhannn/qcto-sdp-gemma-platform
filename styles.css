@@ -90,7 +90,7 @@ img {
 .header-shell {
   height: 70px;
   display: grid;
-  grid-template-columns: 250px 1fr 250px;
+  grid-template-columns: 320px 1fr 250px;
   align-items: center;
 }
 
@@ -103,7 +103,7 @@ img {
 
 .brand img {
   display: block;
-  width: 172px;
+  width: 220px;
   height: auto;
 }
 
@@ -4304,11 +4304,11 @@ img {
   }
 
   .header-shell {
-    grid-template-columns: 220px 1fr 220px;
+    grid-template-columns: 290px 1fr 220px;
   }
 
   .brand img {
-    width: 154px;
+    width: 204px;
   }
 
   .main-nav {
@@ -5130,12 +5130,12 @@ body.career-family-modal-open {
   }
 
   .header-shell {
-    grid-template-columns: 190px 1fr 42px;
+    grid-template-columns: 260px 1fr 42px;
     gap: 14px;
   }
 
   .brand img {
-    width: 150px;
+    width: 190px;
   }
 
   .main-nav {
@@ -5791,7 +5791,7 @@ body.career-family-modal-open {
   }
 
   .brand img {
-    width: 122px;
+    width: 160px;
   }
 
   .mobile-menu-toggle {
@@ -8203,7 +8203,7 @@ body.large-table-open {
   }
 }
 
-/* v23: AI assistant loading spinner and enquiry message style chooser */
+/* v24: custom QCTO PathFinder logo and learnership strategy banner text */
 .ai-message-template__head {
   display: flex;
   align-items: center;
