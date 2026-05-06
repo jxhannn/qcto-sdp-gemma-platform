@@ -103,8 +103,10 @@ img {
 
 .brand img {
   display: block;
-  width: 220px;
+  width: 210px;
+  max-height: 62px;
   height: auto;
+  object-fit: contain;
 }
 
 .brand-fallback {
@@ -4308,7 +4310,8 @@ img {
   }
 
   .brand img {
-    width: 204px;
+    width: 198px;
+    max-height: 60px;
   }
 
   .main-nav {
@@ -5135,7 +5138,8 @@ body.career-family-modal-open {
   }
 
   .brand img {
-    width: 190px;
+    width: 186px;
+    max-height: 58px;
   }
 
   .main-nav {
@@ -5216,7 +5220,8 @@ body.career-family-modal-open {
   }
 
   .brand img {
-    width: 136px;
+    width: 150px;
+    max-height: 52px;
   }
 
   .mobile-menu-toggle {
@@ -5791,7 +5796,8 @@ body.career-family-modal-open {
   }
 
   .brand img {
-    width: 160px;
+    width: 150px;
+    max-height: 52px;
   }
 
   .mobile-menu-toggle {
@@ -8203,7 +8209,7 @@ body.large-table-open {
   }
 }
 
-/* v24: custom QCTO PathFinder logo and learnership strategy banner text */
+/* v25: exact supplied QCTO PathFinder logo applied with cache-busted asset path */
 .ai-message-template__head {
   display: flex;
   align-items: center;

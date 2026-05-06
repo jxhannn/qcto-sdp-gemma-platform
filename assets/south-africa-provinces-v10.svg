@@ -5,7 +5,6 @@
   path:hover { filter: brightness(1.07); stroke-width: 4; }
   path.is-muted { opacity: .28; filter: grayscale(1); }
   path.is-selected { opacity: 1; stroke: #ffffff; stroke-width: 8; filter: drop-shadow(0 2px 4px rgba(8,43,95,.22)); }
-  path:focus, path:focus-visible, svg:focus, svg:focus-visible { outline: none !important; }
   path[data-id="ZA.GT"] { fill: #7b2e8e; }
   path[data-id="ZA.NL"] { fill: #df63b2; }
   path[data-id="ZA.NP"] { fill: #8c70d6; }
@@ -64,22 +63,14 @@
   Array.prototype.forEach.call(document.querySelectorAll("path[data-id]"), function (path) {
     var provinceName = provinceById[path.getAttribute("data-id")] || path.getAttribute("data-name") || "";
     path.setAttribute("role", "button");
-    path.setAttribute("focusable", "false");
+    path.setAttribute("tabindex", "0");
     path.setAttribute("aria-label", "Filter by " + provinceName);
     path.setAttribute("aria-pressed", "false");
-    path.addEventListener("mousedown", function (event) {
-      event.preventDefault();
-    });
     path.addEventListener("click", function () {
       if (window.parent) {
         window.parent.postMessage({ type: "qcto-explore-province-click", province: provinceName }, "*");
       }
       setSelected(provinceName === selectedProvince ? "" : provinceName);
-      try {
-        if (document.activeElement && typeof document.activeElement.blur === "function") {
-          document.activeElement.blur();
-        }
-      } catch (error) {}
     });
     path.addEventListener("keydown", function (event) {
       if (event.key !== "Enter" && event.key !== " ") return;
