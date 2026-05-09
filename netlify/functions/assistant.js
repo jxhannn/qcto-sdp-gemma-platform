@@ -106,15 +106,103 @@ function clampNumber(value, fallback, min, max) {
   return Math.max(min, Math.min(max, number));
 }
 
-function jsonResponse(statusCode, body) {
+// ===========================================================================
+// SECURITY: CORS origin allowlist + in-memory rate limiting
+// Added by Kiro review (review/kiro-fixes-preview branch)
+// ===========================================================================
+
+// Allowed origins. Set ALLOWED_ORIGINS env var (comma-separated) to override.
+// By default, we allow the production Netlify URL, its deploy-preview subdomains,
+// and localhost for dev.
+const DEFAULT_ALLOWED_ORIGINS = [
+  "https://qcto-sdp-gemma-platform.netlify.app",
+  "http://localhost:8888",
+  "http://localhost:3000",
+  "http://127.0.0.1:8888"
+];
+
+function getAllowedOrigins() {
+  const fromEnv = String(process.env.ALLOWED_ORIGINS || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  return fromEnv.length ? fromEnv : DEFAULT_ALLOWED_ORIGINS;
+}
+
+function resolveCorsOrigin(requestOrigin) {
+  if (!requestOrigin) return "";
+  const allowed = getAllowedOrigins();
+  if (allowed.includes(requestOrigin)) return requestOrigin;
+  // Allow any Netlify deploy-preview subdomain of this site (e.g. deploy-preview-3--qcto-sdp-gemma-platform.netlify.app)
+  try {
+    const url = new URL(requestOrigin);
+    if (/^(deploy-preview-\d+--|branch-preview--)?qcto-sdp-gemma-platform\.netlify\.app$/i.test(url.hostname)) {
+      return requestOrigin;
+    }
+  } catch (e) { /* ignore */ }
+  return "";
+}
+
+// Rate limiter: simple sliding window, per-IP, in-memory.
+// Resets on cold start. Good enough for a portfolio site; not a replacement for a real WAF.
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX_REQUESTS = clampNumber(process.env.RATE_LIMIT_MAX, 10, 1, 1000);
+const rateLimitStore = new Map(); // ip -> [timestamps]
+
+function getClientIp(event) {
+  const headers = (event && event.headers) || {};
+  const fwd = headers["x-forwarded-for"] || headers["X-Forwarded-For"] || "";
+  const first = String(fwd).split(",")[0].trim();
+  return first || headers["client-ip"] || headers["x-real-ip"] || "unknown";
+}
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const windowStart = now - RATE_LIMIT_WINDOW_MS;
+  const history = (rateLimitStore.get(ip) || []).filter((t) => t > windowStart);
+
+  // Occasional cleanup so the Map does not grow unbounded on a warm instance
+  if (rateLimitStore.size > 5000) {
+    for (const [key, times] of rateLimitStore) {
+      const kept = times.filter((t) => t > windowStart);
+      if (kept.length) rateLimitStore.set(key, kept);
+      else rateLimitStore.delete(key);
+    }
+  }
+
+  if (history.length >= RATE_LIMIT_MAX_REQUESTS) {
+    const retryAfterMs = Math.max(1000, (history[0] + RATE_LIMIT_WINDOW_MS) - now);
+    return { allowed: false, retryAfterSec: Math.ceil(retryAfterMs / 1000), remaining: 0 };
+  }
+
+  history.push(now);
+  rateLimitStore.set(ip, history);
+  return { allowed: true, retryAfterSec: 0, remaining: RATE_LIMIT_MAX_REQUESTS - history.length };
+}
+
+function jsonResponse(statusCode, body, options = {}) {
+  const origin = resolveCorsOrigin(options.requestOrigin || "");
+  const corsHeaders = {};
+  if (origin) {
+    corsHeaders["Access-Control-Allow-Origin"] = origin;
+    corsHeaders["Vary"] = "Origin";
+  }
+  // Note: if origin was not allowed, we still return the response body so that same-origin
+  // (server-to-server) calls and health checks work. The browser simply cannot read it
+  // cross-origin without the header, which is the desired behaviour.
+
+  const rateHeaders = options.rateHeaders || {};
+
   return {
     statusCode,
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
+      ...corsHeaders,
       "Access-Control-Allow-Headers": "Content-Type",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Cache-Control": "no-store"
+      "Cache-Control": "no-store",
+      "X-Content-Type-Options": "nosniff",
+      ...rateHeaders
     },
     body: JSON.stringify(body)
   };
@@ -1072,6 +1160,81 @@ function buildExploreFilters(matches, detectedProvince, intent = null, message =
   };
 }
 
+// ===========================================================================
+// SAFETY: Post-process Gemma answer to strip any hallucinated providers/emails
+// Added by Kiro review (review/kiro-fixes-preview branch)
+// The model is instructed not to invent - this is a belt-and-braces guard.
+// ===========================================================================
+function sanitiseGemmaAnswer(rawAnswer, matches, detectedProvince, detectedCityTown) {
+  const answer = String(rawAnswer || "").trim();
+  if (!answer) return { answer, stripped: 0, warning: "" };
+
+  const safeMatches = Array.isArray(matches) ? matches : [];
+  const allowedProviderKeys = new Set(
+    safeMatches.map((row) => normalise(row.providerName)).filter(Boolean)
+  );
+  const allowedEmails = new Set(
+    safeMatches
+      .flatMap((row) => String(row.email || "").split(/[,;\s]+/))
+      .map((e) => e.trim().toLowerCase())
+      .filter((e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))
+  );
+  const allowedPhones = new Set(
+    safeMatches
+      .map((row) => String(row.contact || "").replace(/[^\d+]/g, ""))
+      .filter((p) => p.length >= 8)
+  );
+
+  let stripped = 0;
+  let output = answer;
+
+  // 1. Strip any email that isn't in the matches
+  output = output.replace(/[a-zA-Z0-9._+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g, (match) => {
+    if (allowedEmails.has(match.toLowerCase())) return match;
+    stripped++;
+    return "[email removed - please verify via Explore]";
+  });
+
+  // 2. Strip any phone-like number that isn't in the matches
+  output = output.replace(/(?:\+?27|0)\s?\d(?:[\s\-]?\d){7,10}/g, (match) => {
+    const digits = match.replace(/[^\d+]/g, "");
+    if (allowedPhones.has(digits)) return match;
+    stripped++;
+    return "[phone removed - please verify via Explore]";
+  });
+
+  // 3. Soft check: flag if answer mentions "provider:" or "call X at" patterns pointing
+  //    at a provider name not in matches. We do not rewrite the whole answer because
+  //    the model often paraphrases names - we only add a warning so the UI can display it.
+  let warning = "";
+  if (allowedProviderKeys.size > 0) {
+    // Look for "Provider: XYZ" or "SDP: XYZ" style patterns
+    const providerMentions = output.match(/(?:provider|sdp|institution)[:\s]+"?([A-Z][A-Za-z0-9 &.,'\-]{3,60})"?/gi) || [];
+    const hallucinatedCount = providerMentions.filter((mention) => {
+      const name = mention.replace(/^(?:provider|sdp|institution)[:\s]+"?/i, "").replace(/"$/, "").trim();
+      return name && !allowedProviderKeys.has(normalise(name));
+    }).length;
+    if (hallucinatedCount > 0) {
+      warning = "Some provider names in the answer could not be verified. Please use the Explore page for confirmed records.";
+    }
+  }
+
+  // 4. Strip out province names the user did not mention if we detected a specific province
+  //    (light-touch - only if the answer name-drops a different province as a recommendation)
+  if (detectedProvince) {
+    const otherProvinces = PROVINCES.filter((p) => p !== detectedProvince);
+    for (const otherP of otherProvinces) {
+      // Only flag if the other province is mentioned as a recommendation ("try X", "in X")
+      const pattern = new RegExp(`\\b(?:try|look in|in)\\s+${otherP.replace(/[-[\]/{}()*+?.\\^$|]/g, "\\$&")}\\b`, "i");
+      if (pattern.test(output) && !warning) {
+        warning = `The assistant suggested pathways outside ${detectedProvince}. Use the Explore filter to confirm options near you.`;
+      }
+    }
+  }
+
+  return { answer: output, stripped, warning };
+}
+
 async function fetchWithTimeout(url, options, timeoutMs) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -1085,7 +1248,7 @@ async function fetchWithTimeout(url, options, timeoutMs) {
 async function callGemma(message, matches, detectedProvince, intent, detectedCityTown = "", hasLocalMatches = true) {
   const apiKey = process.env.GEMINI_API_KEY;
   const model = process.env.GEMMA_MODEL || DEFAULT_MODEL;
-  const timeoutMs = clampNumber(process.env.GEMMA_TIMEOUT_MS, DEFAULT_GEMMA_TIMEOUT_MS, 3000, 12000);
+  const timeoutMs = clampNumber(process.env.GEMMA_TIMEOUT_MS, DEFAULT_GEMMA_TIMEOUT_MS, 3000, 8000);
   const maxOutputTokens = clampNumber(process.env.GEMMA_MAX_OUTPUT_TOKENS, DEFAULT_MAX_OUTPUT_TOKENS, 120, 450);
 
   if (!apiKey || !matches.length) {
@@ -1128,15 +1291,24 @@ Answer with: suggested path, matching qualifications/providers, and next steps.`
 
     const data = await response.json().catch(() => null);
     const parts = data && data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts;
-    const answer = Array.isArray(parts) ? parts.map((part) => part.text || "").join("\n").trim() : "";
-    return { usedGemma: Boolean(answer), answer: answer || buildFallbackAnswer(message, matches, detectedProvince, intent, detectedCityTown, hasLocalMatches), warning: "" };
+    const rawAnswer = Array.isArray(parts) ? parts.map((part) => part.text || "").join("\n").trim() : "";
+    if (!rawAnswer) {
+      return { usedGemma: false, answer: buildFallbackAnswer(message, matches, detectedProvince, intent, detectedCityTown, hasLocalMatches), warning: "" };
+    }
+
+    // Strip any hallucinated providers/emails/phones before returning to the client
+    const cleaned = sanitiseGemmaAnswer(rawAnswer, matches, detectedProvince, detectedCityTown);
+    if (cleaned.stripped > 0) {
+      console.warn("Sanitised Gemma answer: stripped", cleaned.stripped, "fragment(s)");
+    }
+    return { usedGemma: true, answer: cleaned.answer, warning: cleaned.warning };
   } catch (error) {
     console.error("Gemma request failed", error);
     return { usedGemma: false, answer: buildFallbackAnswer(message, matches, detectedProvince, intent, detectedCityTown, hasLocalMatches), warning: "" };
   }
 }
 
-async function buildAssistantResponse(message) {
+async function buildAssistantResponse(message, responseOptions = {}) {
   const providersForLocation = loadProviders();
   const initialLocation = detectLocation(message, providersForLocation);
   let detectedProvince = initialLocation.province;
@@ -1173,26 +1345,44 @@ async function buildAssistantResponse(message) {
     messageTemplate: buildMessageTemplate(matches),
     messageTemplates: buildMessageTemplates(matches),
     exploreFilters: buildExploreFilters(matches, detectedProvince, detectedIntent, message, detectedCityTown)
-  });
+  }, responseOptions);
 }
 
 exports.handler = async function handler(event) {
-  if (event.httpMethod === "OPTIONS") return jsonResponse(200, { ok: true });
-  if (event.httpMethod !== "POST") return jsonResponse(405, { error: "Method not allowed. Use POST." });
+  const requestOrigin = (event && event.headers && (event.headers.origin || event.headers.Origin)) || "";
+  const responseOptions = { requestOrigin };
+
+  if (event.httpMethod === "OPTIONS") return jsonResponse(200, { ok: true }, responseOptions);
+  if (event.httpMethod !== "POST") return jsonResponse(405, { error: "Method not allowed. Use POST." }, responseOptions);
+
+  // Rate limit BEFORE JSON parsing so hammering the endpoint is cheap
+  const clientIp = getClientIp(event);
+  const rl = checkRateLimit(clientIp);
+  const rateHeaders = {
+    "X-RateLimit-Limit": String(RATE_LIMIT_MAX_REQUESTS),
+    "X-RateLimit-Remaining": String(rl.remaining)
+  };
+  if (!rl.allowed) {
+    return jsonResponse(429, {
+      error: "Too many requests. Please wait a moment and try again.",
+      retryAfterSec: rl.retryAfterSec
+    }, { ...responseOptions, rateHeaders: { ...rateHeaders, "Retry-After": String(rl.retryAfterSec) } });
+  }
+  responseOptions.rateHeaders = rateHeaders;
 
   let body;
   try {
     body = JSON.parse(event.body || "{}");
   } catch (error) {
-    return jsonResponse(400, { error: "Invalid JSON request body." });
+    return jsonResponse(400, { error: "Invalid JSON request body." }, responseOptions);
   }
 
   const message = String(body.message || body.question || body.prompt || "").trim();
-  if (!message || message.length < 3) return jsonResponse(400, { error: "Please type a clear question first." });
-  if (message.length > 800) return jsonResponse(400, { error: "Please keep your question under 800 characters." });
+  if (!message || message.length < 3) return jsonResponse(400, { error: "Please type a clear question first." }, responseOptions);
+  if (message.length > 800) return jsonResponse(400, { error: "Please keep your question under 800 characters." }, responseOptions);
 
   try {
-    return await buildAssistantResponse(message);
+    return await buildAssistantResponse(message, responseOptions);
   } catch (error) {
     console.error("Assistant function error", error);
     const providersForLocation = loadProviders();
@@ -1211,6 +1401,6 @@ exports.handler = async function handler(event) {
       messageTemplate: buildMessageTemplate([]),
       messageTemplates: buildMessageTemplates([]),
       exploreFilters: buildExploreFilters([], detectedProvince, intent, message, detectedCityTown)
-    });
+    }, responseOptions);
   }
 };
