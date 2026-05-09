@@ -8292,3 +8292,84 @@ body.large-table-open {
     justify-content: flex-start;
   }
 }
+
+
+/* ==========================================================================
+   Kiro review additions (Packs A/B/C)
+   Appended to end of file so nothing above is affected.
+   ========================================================================== */
+
+/* Visually hidden utility - accessible to screen readers, invisible on screen */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Skip-to-content link for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 8px;
+  z-index: 10000;
+  background: #C8102E;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+.skip-link:focus {
+  top: 8px;
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Modal background inert state - pointer events disabled, keeps visual dim */
+body.modal-open-any {
+  overflow: hidden;
+}
+
+/* Sortable table header styling (used by the Explore table sort enhancement) */
+.explore-results-table thead th[data-sort] {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 22px;
+}
+.explore-results-table thead th[data-sort]::after {
+  content: "\2195"; /* up-down arrow */
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.35;
+  font-size: 0.9em;
+}
+.explore-results-table thead th[data-sort][aria-sort="ascending"]::after {
+  content: "\25B4";
+  opacity: 1;
+}
+.explore-results-table thead th[data-sort][aria-sort="descending"]::after {
+  content: "\25BE";
+  opacity: 1;
+}
+.explore-results-table thead th[data-sort]:hover {
+  background-color: rgba(200, 16, 46, 0.05);
+}
+.explore-results-table thead th[data-sort]:focus-visible {
+  outline: 2px solid #C8102E;
+  outline-offset: -2px;
+}
+
+/* Floating AI button needs to work on all pages when moved outside explore */
+body .floating-ai-assistant {
+  z-index: 1000;
+}

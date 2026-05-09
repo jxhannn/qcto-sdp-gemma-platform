@@ -1,10 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-ZA">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QCTO PathFinder | Gemma Learnership Discovery</title>
-  <link rel="stylesheet" href="styles.css?v=25" />
+
+  <!-- Primary SEO -->
+  <meta name="description" content="Discover accredited QCTO Skills Development Providers, learnership pathways, qualifications and SETA-linked training across South Africa. Search smarter before you apply." />
+  <meta name="keywords" content="QCTO, learnership, SETA, Skills Development Provider, SDP, accredited providers, South Africa, qualifications, career pathways, Gemma AI" />
+  <meta name="author" content="Johanne Maziya" />
+  <meta name="theme-color" content="#C8102E" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://qcto-sdp-gemma-platform.netlify.app/" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/qcto-logo.svg" />
+  <link rel="alternate icon" type="image/png" href="assets/qcto-logo.png" />
+  <link rel="apple-touch-icon" href="assets/qcto-logo.png" />
+
+  <!-- Open Graph (LinkedIn, WhatsApp, Facebook) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="QCTO PathFinder" />
+  <meta property="og:title" content="QCTO PathFinder | Gemma Learnership Discovery" />
+  <meta property="og:description" content="Find accredited Skills Development Providers, learnership pathways and SETA-linked training across South Africa. AI-powered search to help you apply smarter." />
+  <meta property="og:url" content="https://qcto-sdp-gemma-platform.netlify.app/" />
+  <meta property="og:locale" content="en_ZA" />
+  <meta property="og:image" content="https://qcto-sdp-gemma-platform.netlify.app/assets/qcto-hero-banner.webp" />
+  <meta property="og:image:alt" content="QCTO PathFinder — search accredited learnership providers in South Africa" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="QCTO PathFinder | Gemma Learnership Discovery" />
+  <meta name="twitter:description" content="Find accredited Skills Development Providers, learnership pathways and SETA-linked training across South Africa." />
+  <meta name="twitter:image" content="https://qcto-sdp-gemma-platform.netlify.app/assets/qcto-hero-banner.webp" />
+  <meta name="twitter:image:alt" content="QCTO PathFinder — search accredited learnership providers in South Africa" />
+  <meta name="twitter:creator" content="@jxhann_" />
+
+  <!-- Structured data: WebSite + Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://qcto-sdp-gemma-platform.netlify.app/#website",
+        "url": "https://qcto-sdp-gemma-platform.netlify.app/",
+        "name": "QCTO PathFinder",
+        "description": "Search accredited QCTO Skills Development Providers, learnership pathways and SETA-linked training across South Africa.",
+        "inLanguage": "en-ZA"
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://qcto-sdp-gemma-platform.netlify.app/#organization",
+        "name": "QCTO PathFinder",
+        "url": "https://qcto-sdp-gemma-platform.netlify.app/",
+        "logo": "https://qcto-sdp-gemma-platform.netlify.app/assets/qcto-logo.png",
+        "sameAs": [
+          "https://www.linkedin.com/in/johannemaziya",
+          "https://x.com/jxhann_",
+          "https://instagram.com/jxhannnnnnnn"
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="styles.min.css?v=25" />
   <link rel="preload" as="image" href="assets/qcto-pathfinder-logo-exact.svg?v=25" fetchpriority="high">
   <link rel="preload" as="image" href="assets/partner-logos-ui/services-seta.png?v=13" fetchpriority="high">
   <link rel="preload" as="image" href="assets/partner-logos-ui/nated.png?v=13">
@@ -34,6 +97,7 @@
   <link rel="preload" as="image" href="assets/partner-logos-ui/wrseta.png?v=13" fetchpriority="low">
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
   <header class="site-header">
     <div class="shell header-shell">
       <a class="brand" href="#home" data-view="home" aria-label="QCTO PathFinder Home">
@@ -57,11 +121,12 @@
     </div>
   </header>
 
-  <main class="shell page-shell">
+  <main id="main-content" class="shell page-shell">
     <section class="page-view active" data-page="home">
       <section class="hero home-hero">
         <div class="hero-copy home-copy">
           <h1>Search smarter before you apply</h1>
+          <h2 class="visually-hidden">Homepage overview</h2>
           <p>Thousands apply for learnerships, but selection is strategic. Find relevant pathways, accredited providers and better enquiry steps before you apply.</p>
           <div class="home-search-wrap">
             <form class="search-bar home-search-bar" id="home-search-form" aria-label="Search careers, qualifications and providers" autocomplete="off">
@@ -169,7 +234,7 @@
             <div class="partner-slide">
               <div class="partner-body">
                 <div class="partner-logo-frame partner-logo-wrap">
-                  <img id="home-partner-logo" src="data:image/png;base64,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" alt="Services SETA logo" loading="eager" decoding="async" fetchpriority="high" />
+                  <img id="home-partner-logo" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="1" height="1" alt="Services SETA logo" loading="eager" decoding="async" fetchpriority="high" />
                   <span id="home-partner-logo-fallback" class="partner-logo-instant">SERVICES</span>
                 </div>
                 <div class="partner-copy">
@@ -266,6 +331,7 @@
       <section class="hero explore-hero">
         <div class="hero-copy explore-copy">
           <h1>Explore accredited providers before waiting for the next advert.</h1>
+          <h2 class="visually-hidden">Provider explorer and filters</h2>
           <p>Learnership adverts can be highly competitive. Use provider records to search by field, province, qualification and SETA-linked pathway first.</p>
           <form class="search-bar explore-search-bar" aria-label="Search qualifications, careers and providers" autocomplete="off">
             <span class="search-icon" aria-hidden="true"></span>
@@ -392,15 +458,15 @@
             </colgroup>
             <thead>
               <tr>
-                <th>Provider Name</th>
-                <th>Province</th>
-                <th>Career</th>
-                <th>Qualification Title</th>
-                <th>NQF Level</th>
-                <th>SETA / Partner</th>
-                <th>Status</th>
-                <th>Email</th>
-                <th>Contact</th>
+                <th scope="col" data-sort="providerName" aria-sort="none" tabindex="0" role="columnheader button" title="Click to sort by Provider Name">Provider Name</th>
+                <th scope="col" data-sort="province" aria-sort="none" tabindex="0" role="columnheader button" title="Click to sort by Province">Province</th>
+                <th scope="col" data-sort="career" aria-sort="none" tabindex="0" role="columnheader button" title="Click to sort by Career">Career</th>
+                <th scope="col" data-sort="qualificationTitle" aria-sort="none" tabindex="0" role="columnheader button" title="Click to sort by Qualification Title">Qualification Title</th>
+                <th scope="col" data-sort="nqfLevel" aria-sort="none" tabindex="0" role="columnheader button" title="Click to sort by NQF Level">NQF Level</th>
+                <th scope="col" data-sort="setaPartner" aria-sort="none" tabindex="0" role="columnheader button" title="Click to sort by SETA / Partner">SETA / Partner</th>
+                <th scope="col" data-sort="accreditationStatus" aria-sort="descending" tabindex="0" role="columnheader button" title="Click to sort by Status (Active-first)">Status</th>
+                <th scope="col">Email</th>
+                <th scope="col">Contact</th>
               </tr>
             </thead>
             <tbody id="explore-results-body"><tr><td colspan="9">Loading provider records...</td></tr></tbody>
@@ -419,17 +485,13 @@
           <button class="primary" type="button" data-view="explore"><span class="action-icon magnify-icon" aria-hidden="true"></span>Find providers</button>
         </div>
       </section>
-
-      <button class="floating-ai-assistant" type="button" data-open-ai-assistant aria-label="Ask AI assistant">
-        <span class="floating-ai-assistant__icon" aria-hidden="true">AI</span>
-        <span class="floating-ai-assistant__text">Ask AI</span>
-      </button>
     </section>
 
     <section class="page-view" data-page="careers">
       <section class="hero careers-hero">
         <div class="hero-copy career-copy">
           <h1>Turn career interests into a smarter application direction.</h1>
+          <h2 class="visually-hidden">Career families and pathways</h2>
           <p>Browse career families, identify matching qualifications and focus your search on providers that fit your field.</p>
           <div class="career-search-wrap">
             <form class="search-bar career-search" id="career-search-form" aria-label="Search careers" autocomplete="off">
@@ -524,6 +586,7 @@
       <section class="hero about-hero">
         <div class="hero-copy about-copy">
           <h1>About QCTO PathFinder and smarter learnership searching</h1>
+          <h2 class="visually-hidden">About the platform and creator</h2>
           <p>A learner-facing tool that helps users search with strategy, not just apply and hope.</p>
           <button class="primary hero-button" type="button" data-view="explore">Start exploring <span aria-hidden="true">&rarr;</span></button>
         </div>
@@ -661,15 +724,15 @@
               </colgroup>
               <thead>
                 <tr>
-                  <th>Provider Name</th>
-                  <th>Province</th>
-                  <th>Career</th>
-                  <th>Qualification Title</th>
-                  <th>NQF Level</th>
-                  <th>SETA / Partner</th>
-                  <th>Status</th>
-                  <th>Email</th>
-                  <th>Contact</th>
+                  <th scope="col" data-sort="providerName" aria-sort="none" tabindex="0" role="columnheader button" title="Click to sort by Provider Name">Provider Name</th>
+                  <th scope="col" data-sort="province" aria-sort="none" tabindex="0" role="columnheader button" title="Click to sort by Province">Province</th>
+                  <th scope="col" data-sort="career" aria-sort="none" tabindex="0" role="columnheader button" title="Click to sort by Career">Career</th>
+                  <th scope="col" data-sort="qualificationTitle" aria-sort="none" tabindex="0" role="columnheader button" title="Click to sort by Qualification Title">Qualification Title</th>
+                  <th scope="col" data-sort="nqfLevel" aria-sort="none" tabindex="0" role="columnheader button" title="Click to sort by NQF Level">NQF Level</th>
+                  <th scope="col" data-sort="setaPartner" aria-sort="none" tabindex="0" role="columnheader button" title="Click to sort by SETA / Partner">SETA / Partner</th>
+                  <th scope="col" data-sort="accreditationStatus" aria-sort="descending" tabindex="0" role="columnheader button" title="Click to sort by Status (Active-first)">Status</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Contact</th>
                 </tr>
               </thead>
               <tbody id="explore-expanded-results-body"><tr><td colspan="9">Open Explore to load provider records.</td></tr></tbody>
@@ -696,7 +759,8 @@
           <button type="button" data-ai-example="I am in KwaZulu-Natal and I am interested in hospitality or cooking.">Hospitality in KZN</button>
         </div>
         <form class="ai-assistant-form" id="ai-assistant-form">
-          <textarea id="ai-assistant-input" rows="4" maxlength="800" placeholder="Example: I live in Limpopo and I like working with computers. What career path and providers can I explore?" required></textarea>
+          <label for="ai-assistant-input" class="visually-hidden">Ask the Gemma learnership assistant</label>
+          <textarea id="ai-assistant-input" rows="4" maxlength="800" placeholder="Example: I live in Limpopo and I like working with computers. What career path and providers can I explore?" required aria-label="Describe your interest, province and situation so Gemma can suggest learnership pathways" aria-describedby="ai-assistant-title"></textarea>
           <button class="primary" type="submit">Ask Gemma</button>
         </form>
         <div class="ai-assistant-status" id="ai-assistant-status" role="status" aria-live="polite"></div>
@@ -717,6 +781,12 @@
         <p class="ai-assistant-note">Important: accreditation does not guarantee funding or a current learnership intake. Always contact the provider directly to confirm availability, requirements and application dates.</p>
       </section>
     </div>
+
+    <!-- Floating AI assistant - global, visible on every page (Pack C) -->
+    <button class="floating-ai-assistant floating-ai-assistant--global" type="button" data-open-ai-assistant aria-label="Ask the Gemma AI assistant about learnerships and providers">
+      <span class="floating-ai-assistant__icon" aria-hidden="true">AI</span>
+      <span class="floating-ai-assistant__text">Ask AI</span>
+    </button>
 
   </main>
 

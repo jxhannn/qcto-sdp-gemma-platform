@@ -5,6 +5,99 @@
   const mainNav = document.querySelector(".main-nav");
   const viewTriggers = document.querySelectorAll("[data-view]");
   const validViews = ["home", "explore", "careers", "about"];
+
+  // ==========================================================================
+  // A11y: Shared focus-trap / inert-background utility for all modals
+  // Added by Kiro review (review/kiro-fixes-preview branch)
+  // ==========================================================================
+  const FOCUSABLE_SELECTOR = 'a[href], area[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, [tabindex]:not([tabindex="-1"]), [contenteditable="true"]';
+  const _modalTrapStack = [];
+
+  function _getFocusableInside(container) {
+    if (!container) return [];
+    return Array.from(container.querySelectorAll(FOCUSABLE_SELECTOR))
+      .filter((el) => !el.hasAttribute("disabled") && el.offsetParent !== null && el.getAttribute("aria-hidden") !== "true");
+  }
+
+  function _setBackgroundInert(modalEl, isInert) {
+    // Make every direct child of <body> (except the modal itself) inert while modal is open
+    Array.from(document.body.children).forEach((child) => {
+      if (child === modalEl) return;
+      if (isInert) {
+        if (!child.hasAttribute("data-kiro-inert-prev")) {
+          child.setAttribute("data-kiro-inert-prev", child.hasAttribute("inert") ? "1" : "0");
+        }
+        child.setAttribute("inert", "");
+      } else {
+        const prev = child.getAttribute("data-kiro-inert-prev");
+        if (prev === "0" || prev === null) child.removeAttribute("inert");
+        child.removeAttribute("data-kiro-inert-prev");
+      }
+    });
+  }
+
+  function openModalTrap(modalEl, options = {}) {
+    if (!modalEl) return;
+    const previouslyFocused = document.activeElement;
+    const initialFocus = options.initialFocus
+      || modalEl.querySelector("[data-modal-initial-focus]")
+      || _getFocusableInside(modalEl)[0]
+      || modalEl;
+
+    const keyHandler = (event) => {
+      if (event.key === "Escape" && typeof options.onEscape === "function") {
+        options.onEscape();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = _getFocusableInside(modalEl);
+      if (!focusable.length) {
+        event.preventDefault();
+        modalEl.focus();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", keyHandler, true);
+    _setBackgroundInert(modalEl, true);
+    document.body.classList.add("modal-open-any");
+    _modalTrapStack.push({ modalEl, keyHandler, previouslyFocused });
+
+    // Focus the initial element on the next frame so it is visible first
+    requestAnimationFrame(() => {
+      try { if (initialFocus && typeof initialFocus.focus === "function") initialFocus.focus(); } catch (e) {}
+    });
+  }
+
+  function closeModalTrap(modalEl) {
+    const idx = _modalTrapStack.findIndex((t) => t.modalEl === modalEl);
+    if (idx === -1) return;
+    const trap = _modalTrapStack.splice(idx, 1)[0];
+    document.removeEventListener("keydown", trap.keyHandler, true);
+    if (!_modalTrapStack.length) {
+      _setBackgroundInert(modalEl, false);
+      document.body.classList.remove("modal-open-any");
+    }
+    // Restore focus to whatever opened the modal
+    try {
+      if (trap.previouslyFocused && typeof trap.previouslyFocused.focus === "function") {
+        trap.previouslyFocused.focus();
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  // Expose for the AI-assistant IIFE later in the file
+  window.__kiroModalTrap = { open: openModalTrap, close: closeModalTrap };
+
   const provinceStatsData = window.QCTO_HOME_PROVINCE_STATS || null;
   const exploreProvinceIdToName = {
     "ZA.GT": "Gauteng",
@@ -740,6 +833,102 @@
   let exploreTableRows = [];
   let exploreRowsLoaded = 0;
   let expandedExploreRowsLoaded = 0;
+
+  // Table sort state (Pack C) - default: Status descending so Active appears first
+  let exploreTableSortColumn = "accreditationStatus";
+  let exploreTableSortDirection = "descending"; // "ascending" | "descending"
+
+  // Status sort ordering: Active > Pending > Suspended > Expired > everything else
+  const STATUS_SORT_ORDER = {
+    "active": 4,
+    "pending": 3,
+    "suspended": 2,
+    "expired": 1,
+    "not specified": 0
+  };
+
+  function _statusRank(status) {
+    const normalized = String(status || "").trim().toLowerCase();
+    for (const key of Object.keys(STATUS_SORT_ORDER)) {
+      if (normalized.startsWith(key)) return STATUS_SORT_ORDER[key];
+    }
+    return -1;
+  }
+
+  function sortExploreTableRows(rows) {
+    if (!Array.isArray(rows) || rows.length < 2) return rows;
+    const col = exploreTableSortColumn;
+    const dir = exploreTableSortDirection === "ascending" ? 1 : -1;
+
+    // Sort in place on a copy (never mutate exploreTableAllRows ordering)
+    const sorted = rows.slice();
+
+    if (col === "accreditationStatus") {
+      sorted.sort((a, b) => {
+        const diff = _statusRank(b.accreditationStatus) - _statusRank(a.accreditationStatus);
+        // diff uses descending rank by default; flip if ascending was requested
+        if (dir === 1) return -diff;
+        return diff;
+      });
+    } else if (col === "nqfLevel") {
+      sorted.sort((a, b) => {
+        const av = parseFloat(a.nqfLevel);
+        const bv = parseFloat(b.nqfLevel);
+        const aIsNum = Number.isFinite(av);
+        const bIsNum = Number.isFinite(bv);
+        if (aIsNum && bIsNum) return (av - bv) * dir;
+        if (aIsNum) return -1 * dir;
+        if (bIsNum) return 1 * dir;
+        return String(a.nqfLevel || "").localeCompare(String(b.nqfLevel || "")) * dir;
+      });
+    } else {
+      sorted.sort((a, b) => {
+        const av = String(a[col] || "").toLowerCase();
+        const bv = String(b[col] || "").toLowerCase();
+        return av.localeCompare(bv) * dir;
+      });
+    }
+    return sorted;
+  }
+
+  function updateExploreSortHeaderState() {
+    document.querySelectorAll('.explore-results-table thead th[data-sort]').forEach((th) => {
+      const col = th.dataset.sort;
+      th.setAttribute("aria-sort", col === exploreTableSortColumn ? exploreTableSortDirection : "none");
+    });
+  }
+
+  function bindExploreSortHandlers() {
+    document.querySelectorAll('.explore-results-table thead th[data-sort]').forEach((th) => {
+      if (th.dataset.qctoSortBound === "true") return;
+      th.dataset.qctoSortBound = "true";
+
+      const handleActivate = (event) => {
+        event.preventDefault();
+        const col = th.dataset.sort;
+        if (!col) return;
+        if (exploreTableSortColumn === col) {
+          exploreTableSortDirection = exploreTableSortDirection === "ascending" ? "descending" : "ascending";
+        } else {
+          exploreTableSortColumn = col;
+          // Sensible defaults per column: status/nqf default descending, text default ascending
+          exploreTableSortDirection = (col === "accreditationStatus" || col === "nqfLevel") ? "descending" : "ascending";
+        }
+        exploreTableRows = sortExploreTableRows(exploreTableRows);
+        updateExploreSortHeaderState();
+        resetExploreTableRender();
+        if (typeof isExploreLargeTableOpen === "function" && isExploreLargeTableOpen()) {
+          resetExpandedExploreTableRender();
+        }
+      };
+
+      th.addEventListener("click", handleActivate);
+      th.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        handleActivate(event);
+      });
+    });
+  }
   let expandedExploreTableScrollBound = false;
   let exploreSearchIndex = [];
   let homeSearchIndex = [];
@@ -2114,22 +2303,40 @@
       return exploreTableDataLoadPromise;
     }
 
-    exploreTableDataLoadPromise = new Promise((resolve, reject) => {
-      const existingScript = document.querySelector('script[data-explore-table-data="true"]');
-      if (existingScript) {
-        existingScript.addEventListener("load", () => resolve(getExploreTableDataFromWindow() || []), { once: true });
-        existingScript.addEventListener("error", reject, { once: true });
-        return;
+    // Primary path (Pack D): fetch the static JSON file. Uses native JSON.parse (fastest),
+    // proper MIME type (application/json), cacheable with Cache-Control: immutable.
+    // Falls back to the legacy script-tag injection if the JSON is missing (e.g. on an old deploy).
+    exploreTableDataLoadPromise = (async () => {
+      try {
+        const response = await fetch("assets/data/explore-table-data.json", { cache: "default" });
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const payload = await response.json();
+        const expanded = expandCompactExploreData(payload);
+        if (Array.isArray(expanded) && expanded.length) {
+          window.QCTO_EXPLORE_TABLE_DATA = expanded;
+          return expanded;
+        }
+        throw new Error("Empty payload");
+      } catch (err) {
+        // Fallback: legacy script-tag injection of assets/explore-table-data.js
+        console.warn("Explore JSON fetch failed, falling back to script tag:", err && err.message);
+        return new Promise((resolve, reject) => {
+          const existingScript = document.querySelector('script[data-explore-table-data="true"]');
+          if (existingScript) {
+            existingScript.addEventListener("load", () => resolve(getExploreTableDataFromWindow() || []), { once: true });
+            existingScript.addEventListener("error", reject, { once: true });
+            return;
+          }
+          const script = document.createElement("script");
+          script.src = "assets/explore-table-data.js";
+          script.dataset.exploreTableData = "true";
+          script.async = true;
+          script.onload = () => resolve(getExploreTableDataFromWindow() || []);
+          script.onerror = () => reject(new Error("Could not load Explore table data."));
+          document.body.appendChild(script);
+        });
       }
-
-      const script = document.createElement("script");
-      script.src = "assets/explore-table-data.js";
-      script.dataset.exploreTableData = "true";
-      script.async = true;
-      script.onload = () => resolve(getExploreTableDataFromWindow() || []);
-      script.onerror = () => reject(new Error("Could not load Explore table data."));
-      document.body.appendChild(script);
-    });
+    })();
 
     return exploreTableDataLoadPromise;
   }
@@ -2843,8 +3050,9 @@
     document.body.classList.add("large-table-open");
     resetExpandedExploreTableRender();
 
-    requestAnimationFrame(() => {
-      if (closeButton && typeof closeButton.focus === "function") closeButton.focus();
+    openModalTrap(modal, {
+      initialFocus: closeButton,
+      onEscape: closeExploreLargeTable
     });
   }
 
@@ -2852,6 +3060,7 @@
     const modal = document.getElementById("explore-table-modal");
     if (!modal) return;
 
+    closeModalTrap(modal);
     modal.hidden = true;
     modal.setAttribute("aria-hidden", "true");
     document.body.classList.remove("large-table-open");
@@ -2962,6 +3171,10 @@
       }
       return true;
     });
+
+    // Apply current sort order (default: Status descending = Active first)
+    exploreTableRows = sortExploreTableRows(exploreTableRows);
+    updateExploreSortHeaderState();
 
     updateExploreStatsFromRows(exploreTableRows);
     updateExploreResultsCount(exploreTableRows.length);
@@ -3235,11 +3448,13 @@
 
     try {
       await ensureExploreRowsLoaded();
-      exploreTableRows = exploreTableAllRows;
+      exploreTableRows = sortExploreTableRows(exploreTableAllRows);
       tbody.innerHTML = "";
       exploreRowsLoaded = 0;
       exploreTableInitialised = true;
       populateExploreFilterOptions(exploreTableAllRows);
+      bindExploreSortHandlers();
+      updateExploreSortHeaderState();
       applyExploreTableFilters();
       applyPendingExploreFilters();
 
@@ -3749,6 +3964,7 @@
     const modal = document.getElementById("career-family-modal");
     if (!modal) return;
 
+    closeModalTrap(modal);
     modal.hidden = true;
     modal.setAttribute("aria-hidden", "true");
     document.body.classList.remove("career-family-modal-open");
@@ -3794,12 +4010,11 @@
     document.body.classList.add("career-family-modal-open");
 
     const firstRole = rolesContainer.querySelector("button");
-    if (firstRole) {
-      firstRole.focus({ preventScroll: true });
-    } else {
-      const closeButton = modal.querySelector("[data-close-career-family-modal]");
-      if (closeButton) closeButton.focus({ preventScroll: true });
-    }
+    const closeButton = modal.querySelector("[data-close-career-family-modal]");
+    openModalTrap(modal, {
+      initialFocus: firstRole || closeButton,
+      onEscape: closeCareerFamilyModal
+    });
   }
 
   function initCareerFamilyModal() {
@@ -3867,12 +4082,30 @@
     const nextView = validViews.includes(viewName) ? viewName : "home";
 
     pageViews.forEach((view) => {
-      view.classList.toggle("active", view.dataset.page === nextView);
+      const isActive = view.dataset.page === nextView;
+      view.classList.toggle("active", isActive);
+      // a11y: hide inactive page-views from assistive tech so only one H1 is announced
+      if (isActive) {
+        view.removeAttribute("aria-hidden");
+        view.removeAttribute("inert");
+      } else {
+        view.setAttribute("aria-hidden", "true");
+        view.setAttribute("inert", "");
+      }
     });
 
     navLinks.forEach((link) => {
       link.classList.toggle("active", link.dataset.view === nextView);
     });
+
+    // Update document.title so browser tab + share previews reflect the current view
+    const VIEW_TITLES = {
+      home: "QCTO PathFinder | Gemma Learnership Discovery",
+      explore: "Explore Providers | QCTO PathFinder",
+      careers: "Career Families | QCTO PathFinder",
+      about: "About | QCTO PathFinder"
+    };
+    if (VIEW_TITLES[nextView]) document.title = VIEW_TITLES[nextView];
 
     setMobileMenuOpen(false);
 
@@ -3999,7 +4232,19 @@
     modal.hidden = !isOpen;
     modal.setAttribute("aria-hidden", isOpen ? "false" : "true");
     document.body.classList.toggle("ai-assistant-open", isOpen);
-    if (isOpen) setTimeout(() => input.focus(), 50);
+    const trap = window.__kiroModalTrap;
+    if (isOpen) {
+      if (trap) {
+        trap.open(modal, {
+          initialFocus: input,
+          onEscape: () => setModalOpen(false)
+        });
+      } else {
+        setTimeout(() => input.focus(), 50);
+      }
+    } else {
+      if (trap) trap.close(modal);
+    }
   }
 
   function setLoading(isLoading) {

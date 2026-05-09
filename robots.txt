@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Do not crawl the serverless functions endpoint
+Disallow: /.netlify/functions/
+
+Sitemap: https://qcto-sdp-gemma-platform.netlify.app/sitemap.xml
