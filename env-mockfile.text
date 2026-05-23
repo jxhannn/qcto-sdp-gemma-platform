@@ -1,0 +1,4 @@
+GEMINI_API_KEY=AIzaSyDHhTnQSWRYgOIO***************
+GEMMA_MODEL=gemma-4-26b-a4b-it
+
+The working file is being hosted on Netlify for API Key safety reasons. This i just a mock env file.
